@@ -152,9 +152,9 @@ The following are configurations and library-provided classes you can use to cus
     onBeforeInteractive: (_: Result): void => {},
     onAfterInteractive: (_: Result): void => {},
     onTimeout: (_: Result): void => {},
-    onCreated: (_: Result): void => {},
+    onCreate: (_: Result): void => {},
     onReset: (_: Result): void => {},
-    onRemoved: (_: Result): void => {},
+    onRemove: (_: Result): void => {},
 };
 ```
 

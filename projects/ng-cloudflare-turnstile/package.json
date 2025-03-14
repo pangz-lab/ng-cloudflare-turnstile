@@ -1,6 +1,6 @@
 {
   "name": "@pangz/ng-cloudflare-turnstile",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "peerDependencies": {
     "@angular/common": "^18.2.0",
     "@angular/core": "^18.2.0"
@@ -11,12 +11,21 @@
   "sideEffects": false,
   "keywords": [
     "angular",
+    "angular turnstile",
+    "angular turnst",
+    "ng turnst",
     "cloudflare",
     "turnstile",
     "cloudflare",
     "cloudflare-turnstile",
     "cloudflare turnstile",
+    "ng-cloudflare",
+    "ngx-cloudflare",
+    "ng-turnstile",
     "ng-cloudflare-turnstile",
+    "ng-turnstile-cloudflare",
+    "ngx-cloudflare-turnstile",
+    "ngx-turnstile",
     "cloudf",
     "cflare",
     "cf",
