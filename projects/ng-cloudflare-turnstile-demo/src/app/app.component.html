@@ -1,0 +1,172 @@
+<div class="ctrls">
+    <div class="center-wrapper">
+        <div class="container">
+            <div class="controls">
+                <div class="control-item">
+                    <label for="dropdown1">Site Key</label>
+                    <select id="dropdown1" [formControl]="inSiteKey">
+                        @for (option of viewConfig.siteKey.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    <label for="dropdown2">Language</label>
+                    <select id="dropdown2" [formControl]="inLanguage">
+                        @for (option of viewConfig.language.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    <label for="dropdown3">Theme</label>
+                    <select id="dropdown3" [formControl]="inTheme">
+                        @for (option of viewConfig.theme.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    <label for="dropdown4">Size</label>
+                    <select id="dropdown4" [formControl]="inSize">
+                        @for (option of viewConfig.size.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    <label for="dropdown5">Appearance</label>
+                    <select id="dropdown5" [formControl]="inAppearance">
+                        @for (option of viewConfig.appearance.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    <label for="dropdown6">Retry</label>
+                    <select id="dropdown6" [formControl]="inRetry">
+                        @for (option of viewConfig.retry.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    <label for="textInput">Retry Interval</label>(<i>milliseconds</i>)
+                    <input type="number" [formControl]="inRetryInterval" placeholder="retryInterval" min="1" max=900000>
+                </div>
+
+                <div class="control-item">
+                    <label for="dropdown7">Refresh Expiry</label>
+                    <select id="dropdown7" [formControl]="inRefreshExpiry">
+                        @for (option of viewConfig.refreshExpiry.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="control-item">
+                    <label for="dropdown8">Refresh Timeout</label>
+                    <select id="dropdown8" [formControl]="inRefreshTimeout">
+                        @for (option of viewConfig.refreshTimeout.l; track option.value) {
+                        <option [value]="option.value">{{ option.name }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="output">
+                <div class="ts-container" [style]="inSize.value !== 'FLEXIBLE' ? 'display: flex' : ''">
+                    <div style="padding: 20px">
+
+                        @if(inSiteKey.value?.toUpperCase()?.includes('0000BB')) {
+                            <div style="color: red; font-size: 12px;">⚠️ SELECTED TEST KEY WILL RENDER THE WIDGET INVISIBLE</div>
+                        }
+                        @if(inRetry.value?.toUpperCase()?.includes('NEVER')) {
+                            <div style="color: red; font-size: 12px;">⚠️ RETRY "NEVER" WILL NOT RENDER A NEW WIDGET ON ERROR
+                            </div>
+                        }
+                        <ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)">
+                        </ng-cloudflare-turnstile>
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <i>Events</i>
+                    <textarea class="text-area-cont text-area-event" [formControl]="inEventLogger" readonly>
+                    </textarea>
+                </div>
+                <div>
+                    <i>Last 50 Payload - open DevTools for details
+                        <textarea class="text-area-cont text-area-payload" [formControl]="inPayloadLogger" readonly>
+                    </textarea>
+                        <br>( <b>TurnstileManager</b> object is removed )</i>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-item">
+                    <label for="textInput">Action</label>
+                    <input type="text" [formControl]="inAction" placeholder="action">
+                </div>
+
+                <div class="control-item">
+                    <label for="textInput">CData</label>
+                    <input type="text" [formControl]="inCData" placeholder="cData">
+                </div>
+
+                <div class="control-item">
+                    <label for="textInput">Tab Index</label>
+                    <input type="number" [formControl]="inTabIndex" placeholder="tabIndex">
+                </div>
+
+                <div class="control-item">
+                    <div class="toggle-container">
+                        <label class="toggle">
+                            <input type="checkbox" [formControl]="inResponseField">
+                            <span class="slider"></span>
+                        </label>
+                        <label for="toggle"> Response Field</label>
+                    </div>
+                </div>
+
+                <div class="control-item">
+                    <div class="toggle-container">
+                        <label class="toggle">
+                            <input type="checkbox" [formControl]="inFeedbackEnabled">
+                            <span class="slider"></span>
+                        </label>
+                        <label for="toggle"> Feedback</label>
+                    </div>
+                </div>
+
+                <!-- <div class="control-item">
+                    <i>Events</i>
+                    <textarea style="height: 320px; width: 100%" [formControl]="inEventLogger" readonly>
+                    </textarea>
+                </div> -->
+
+                <div>
+                    <br><i>Configuration</i>
+                    <div class="ts-conf-container">
+                        <pre>{{conf()}}</pre>
+                    </div>
+                    <div class="ts-conf-container-bottom">
+                        @if(configChanges.name !== '') {
+                        <b>{{configChanges.name}}</b> is updated<br>
+                        <b>from</b> "<i>{{configChanges.from}}</i>"<br>
+                        <b>to</b> "<i>{{configChanges.to}}</i>"
+                        } @else {
+                        See the behavior by updating the configs
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

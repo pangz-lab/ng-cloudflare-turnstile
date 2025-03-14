@@ -1,0 +1,28 @@
+{
+  "name": "@pangz/ng-cloudflare-turnstile",
+  "version": "0.0.17",
+  "peerDependencies": {
+    "@angular/common": "^18.2.0",
+    "@angular/core": "^18.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "keywords": [
+    "angular",
+    "cloudflare",
+    "turnstile",
+    "cloudflare-turnstile",
+    "cloudflare turnstile"
+    "cf",
+    "turnst",
+    "tile",
+    "cf tile",
+    "pangz",
+    "pangz-lab",
+    "pangzlab",
+  ],
+  "author": "Pangz",
+  "license": "MIT"
+}
