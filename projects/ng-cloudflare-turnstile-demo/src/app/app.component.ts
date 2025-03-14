@@ -52,6 +52,15 @@ export class AppComponent implements OnInit {
         tabIndex: 0,
         feedbackEnabled: true,
         responseField: true,
+        onSuccess: (_: Result): void => { console.log("CONF onSuccess");},
+        onError: (_: Result): void => { console.log("CONF onError");},
+        onExpired: (_: Result): void => { console.log("CONF onExpired");},
+        onBeforeInteractive: (_: Result): void => { console.log("CONF onBeforeInteractive");},
+        onAfterInteractive: (_: Result): void => { console.log("CONF onAfterInteractive");},
+        onTimeout: (_: Result): void => { console.log("CONF onTimeout");},
+        onCreated: (_: Result): void => { console.log("CONF onCreated");},
+        onReset: (_: Result): void => { console.log("CONF onReset");},
+        onRemoved: (_: Result): void => { console.log("CONF onRemoved");},
     }
 
     configChanges = {

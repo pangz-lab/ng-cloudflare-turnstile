@@ -62,13 +62,15 @@
     height: 260px;
     width: -webkit-fill-available;
     border: 1px outset orangered;
-    display: flex;
+    /* display: flex; */
+    padding-left: 10px;
     align-items: start;
     justify-content: center;
     border-radius: 10px 10px 0px 0px;
     background-color: #232323;
     color: #f6821f;
     font-size: 12px;
+    overflow: auto;
 }
 
 .ts-conf-container-bottom {
@@ -83,6 +85,7 @@
     color: #2c180a;
     font-size: 15px;
     padding: 5px;
+    padding-left: 10px;
 }
 
 .control-item {

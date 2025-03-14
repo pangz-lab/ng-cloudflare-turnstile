@@ -128,6 +128,7 @@ export type Result = {
     manager: TurnstileManager
 }
 
+export type EventCallback = (d: Result) => void;
 export type Config = {
     siteKey: string;
     action?: string;
@@ -143,6 +144,68 @@ export type Config = {
     refreshExpired?: RefreshExpiry;
     refreshTimeout?: RefreshTimeout;
     feedbackEnabled?: boolean;
+    onSuccess?: EventCallback,
+    onError?: EventCallback,
+    onExpired?: EventCallback,
+    onBeforeInteractive?: EventCallback,
+    onAfterInteractive?: EventCallback,
+    onTimeout?: EventCallback,
+    onCreated?: EventCallback,
+    onReset?: EventCallback,
+    onRemoved?: EventCallback,
+}
+
+export class TurnstileManager {
+    constructor(
+        private obj: any,
+        private event: EventEmitter<Result>,
+        private widgetId: string = '',
+        private containerRef: string | HTMLElement = '',
+        private options: any = ''
+    ) {}
+
+    reRender(options: Config): void {
+        this.remove(null);
+        this.updateOptions(options);
+        this.widgetId = this.obj.render(this.containerRef, this.options);
+        
+        const payload = { name: 'WIDGET_CREATED', data: this.widgetId, result: State.WIDGET_CREATED, manager: this}
+        this.options.onCreated(payload);
+        this.event.emit(payload);
+    }
+
+    reset(id: string | HTMLElement | null): void {
+        this.obj.reset(id ?? this.widgetId);
+
+        const payload = { name: 'WIDGET_RESET', data: id, result: State.WIDGET_RESET, manager: this};
+        this.options.onReset(payload);
+        this.event.emit(payload);
+    }
+    
+    remove(id: string | HTMLElement | null): void {
+        this.obj.remove(id ?? this.widgetId);
+
+        const payload = { name: 'WIDGET_REMOVED', data: id, result: State.WIDGET_REMOVED, manager: this};
+        this.options.onRemoved(payload);
+        this.event.emit(payload);
+    }
+
+    private updateOptions(options: Config): void {
+        if(this.options.sitekey !== options.siteKey) { this.options.sitekey = options.siteKey; }
+        if(this.options.action !== options.action) { this.options.action = options.action; }
+        if(this.options.cData !== options.cData) { this.options.cData = options.cData; }
+        if(this.options.tabindex !== options.tabIndex) { this.options.tabindex = options.tabIndex; }
+        if(this.options.language !== options.language) { this.options.language = options.language; }
+        if(this.options.theme !== options.theme) { this.options.theme = options.theme; }
+        if(this.options.size !== options.size) { this.options.size = options.size; }
+        if(this.options.appearance !== options.appearance) { this.options.appearance = options.appearance; }
+        if(this.options.retry !== options.retry) { this.options.retry = options.retry; }
+        if(this.options['retry-interval'] !== options.retryInterval) { this.options['retry-interval'] = options.retryInterval; }
+        if(this.options['refresh-expired'] !== options.refreshExpired) { this.options['refresh-expired'] = options.refreshExpired; }
+        if(this.options['refresh-timeout'] !== options.refreshTimeout) { this.options['refresh-timeout'] = options.refreshTimeout; }
+        if(this.options['response-field'] !== options.responseField) { this.options['response-field'] = options.responseField; }
+        if(this.options['feedback-enabled'] !== options.feedbackEnabled) { this.options['feedback-enabled'] = options.feedbackEnabled; }
+    }
 }
 
 class EventHandler {
@@ -164,6 +227,15 @@ class EventHandler {
         refreshTimeout: RefreshTimeout.AUTO,
         responseField: true,
         feedbackEnabled: true,
+        onSuccess: (_: Result): void => {},
+        onError: (_: Result): void => {},
+        onExpired: (_: Result): void => {},
+        onBeforeInteractive: (_: Result): void => {},
+        onAfterInteractive: (_: Result): void => {},
+        onTimeout: (_: Result): void => {},
+        onCreated: (_: Result): void => {},
+        onReset: (_: Result): void => {},
+        onRemoved: (_: Result): void => {},
     };
 
     static init(e: EventEmitter<Result>, config: Config, manager: TurnstileManager, widgetId = ''): void {
@@ -201,57 +273,8 @@ class EventHandler {
         manager?: TurnstileManager,
         widgetId?: string,
     }): void {
-        if(p.manager !== null) {
-            EventHandler.tsManager = p.manager!;
-        }
-        if(p.widgetId !== null) {
-            EventHandler.widgetId = p.widgetId!;
-        }
-    }
-}
-
-export class TurnstileManager {
-    
-    constructor(
-        private obj: any,
-        private event: EventEmitter<Result>,
-        private widgetId: string = '',
-        private containerRef: string | HTMLElement = '',
-        private options: any = ''
-    ) {}
-
-    reRender(options: Config): void {
-        this.remove(null);
-        this.updateOptions(options);
-        this.widgetId = this.obj.render(this.containerRef, this.options);
-        this.event.emit({ name: 'WIDGET_CREATED', data: this.widgetId, result: State.WIDGET_CREATED, manager: this});
-    }
-
-    reset(id: string | HTMLElement | null): void {
-        this.obj.reset(id ?? this.widgetId);
-        this.event.emit({ name: 'WIDGET_RESET', data: id, result: State.WIDGET_RESET, manager: this});
-    }
-    
-    remove(id: string | HTMLElement | null): void {
-        this.obj.remove(id ?? this.widgetId);
-        this.event.emit({ name: 'WIDGET_REMOVED', data: id, result: State.WIDGET_REMOVED, manager: this});
-    }
-
-    private updateOptions(options: Config): void {
-        if(this.options.sitekey !== options.siteKey) { this.options.sitekey = options.siteKey; }
-        if(this.options.action !== options.action) { this.options.action = options.action; }
-        if(this.options.cData !== options.cData) { this.options.cData = options.cData; }
-        if(this.options.tabindex !== options.tabIndex) { this.options.tabindex = options.tabIndex; }
-        if(this.options.language !== options.language) { this.options.language = options.language; }
-        if(this.options.theme !== options.theme) { this.options.theme = options.theme; }
-        if(this.options.size !== options.size) { this.options.size = options.size; }
-        if(this.options.appearance !== options.appearance) { this.options.appearance = options.appearance; }
-        if(this.options.retry !== options.retry) { this.options.retry = options.retry; }
-        if(this.options['retry-interval'] !== options.retryInterval) { this.options['retry-interval'] = options.retryInterval; }
-        if(this.options['refresh-expired'] !== options.refreshExpired) { this.options['refresh-expired'] = options.refreshExpired; }
-        if(this.options['refresh-timeout'] !== options.refreshTimeout) { this.options['refresh-timeout'] = options.refreshTimeout; }
-        if(this.options['response-field'] !== options.responseField) { this.options['response-field'] = options.responseField; }
-        if(this.options['feedback-enabled'] !== options.feedbackEnabled) { this.options['feedback-enabled'] = options.feedbackEnabled; }
+        if(p.manager !== null) { EventHandler.tsManager = p.manager!; }
+        if(p.widgetId !== null) { EventHandler.widgetId = p.widgetId!; }
     }
 }
 
@@ -278,13 +301,22 @@ export class NgCloudflareTurnstileComponent implements AfterViewInit, OnInit {
         refreshTimeout: RefreshTimeout.AUTO,
         responseField: true,
         feedbackEnabled: true,
+        onSuccess: (_: Result): void => {},
+        onError: (_: Result): void => {},
+        onExpired: (_: Result): void => {},
+        onBeforeInteractive: (_: Result): void => {},
+        onAfterInteractive: (_: Result): void => {},
+        onTimeout: (_: Result): void => {},
+        onCreated: (_: Result): void => {},
+        onReset: (_: Result): void => {},
+        onRemoved: (_: Result): void => {},
     };
     @Output() event = new EventEmitter<Result>();
     constructor() {
         window.onloadTurnstileCallback = function () {
             const conf = EventHandler.conf;
             const containerRef = "#cf-container";
-            const opt = {
+            const renderingConf = {
                 sitekey: conf.siteKey,
                 action: conf.action,
                 cData: conf.cData,
@@ -300,28 +332,53 @@ export class NgCloudflareTurnstileComponent implements AfterViewInit, OnInit {
                 'response-field': conf.responseField,
                 'feedback-enabled': conf.feedbackEnabled,
                 callback: (token: any) => {
-                    EventHandler.emit({ name: 'SUCCESS', data: token, result: State.SUCCESS, manager: EventHandler.manager});
+                    const payload = { name: 'SUCCESS', data: token, result: State.SUCCESS, manager: EventHandler.manager};
+                    EventHandler.conf.onSuccess!(payload);
+                    EventHandler.emit(payload);
                 },
                 'error-callback': (code: any) => {
-                    EventHandler.emit({ name: 'ERROR', data: code, result: State.ERROR, manager: EventHandler.manager });
+                    const payload = { name: 'ERROR', data: code, result: State.ERROR, manager: EventHandler.manager };
+                    EventHandler.conf.onError!(payload);
+                    EventHandler.emit(payload);
                 },
                 'expired-callback': (d: any) => {
-                    EventHandler.emit({ name: 'EXPIRED', data: d, result: State.EXPIRED, manager: EventHandler.manager });
+                    const payload = { name: 'EXPIRED', data: d, result: State.EXPIRED, manager: EventHandler.manager };
+                    EventHandler.conf.onExpired!(payload);
+                    EventHandler.emit(payload);
                 },
                 'before-interactive-callback': (d: any) => {
-                    EventHandler.emit({ name: 'BEFORE_INTERACTIVE', data: d, result: State.BEFORE_INTERACTIVE, manager: EventHandler.manager });
+                    const payload = { name: 'BEFORE_INTERACTIVE', data: d, result: State.BEFORE_INTERACTIVE, manager: EventHandler.manager };
+                    EventHandler.conf.onBeforeInteractive!(payload);
+                    EventHandler.emit(payload);
                 },
                 'after-interactive-callback': (d: any) => {
-                    EventHandler.emit({ name: 'AFTER_INTERACTIVE', data: d, result: State.AFTER_INTERACTIVE, manager: EventHandler.manager });
+                    const payload = { name: 'AFTER_INTERACTIVE', data: d, result: State.AFTER_INTERACTIVE, manager: EventHandler.manager };
+                    EventHandler.conf.onAfterInteractive!(payload);
+                    EventHandler.emit(payload);
                 },
                 'timeout-callback': (d: any) => {
-                    EventHandler.emit({ name: 'TIMEOUT', data: d, result: State.TIMEOUT, manager: EventHandler.manager });
-                }
+                    const payload = { name: 'TIMEOUT', data: d, result: State.TIMEOUT, manager: EventHandler.manager };
+                    EventHandler.conf.onTimeout!(payload);
+                    EventHandler.emit(payload);
+                },
+                // Add the custom callback
+                onSuccess: conf.onSuccess,
+                onError: conf.onError,
+                onExpired: conf.onExpired,
+                onBeforeInteractive: conf.onBeforeInteractive,
+                onAfterInteractive: conf.onAfterInteractive,
+                onTimeout: conf.onTimeout,
+                onCreated: conf.onCreated,
+                onReset: conf.onReset,
+                onRemoved: conf.onRemoved,
             };
-            const widgetId = window.turnstile.render(containerRef, opt);
+            const widgetId = window.turnstile.render(containerRef, renderingConf);
             EventHandler.setWidgetId(widgetId);
-            EventHandler.copyWith({manager: new TurnstileManager(window.turnstile, EventHandler.e, widgetId, containerRef, opt)});
-            EventHandler.emit({ name: 'WIDGET_CREATED', data: widgetId, result: State.WIDGET_CREATED, manager: EventHandler.manager});
+            EventHandler.copyWith({manager: new TurnstileManager(window.turnstile, EventHandler.e, widgetId, containerRef, renderingConf)});
+
+            const payload = { name: 'WIDGET_CREATED', data: widgetId, result: State.WIDGET_CREATED, manager: EventHandler.manager};
+            EventHandler.conf.onCreated!(payload);
+            EventHandler.emit(payload);
         };
     }
 

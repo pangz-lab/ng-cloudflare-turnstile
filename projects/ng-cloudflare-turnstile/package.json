@@ -1,6 +1,6 @@
 {
   "name": "@pangz/ng-cloudflare-turnstile",
-  "version": "0.0.17",
+  "version": "0.1.0",
   "peerDependencies": {
     "@angular/common": "^18.2.0",
     "@angular/core": "^18.2.0"
@@ -14,15 +14,50 @@
     "cloudflare",
     "turnstile",
     "cloudflare-turnstile",
-    "cloudflare turnstile"
+    "cloudflare turnstile",
+    "cloudf",
+    "cflare",
     "cf",
     "turnst",
     "tile",
-    "cf tile",
+    "cf tstile",
     "pangz",
     "pangz-lab",
+    "captcha",
+    "capcha",
+    "recaptcha",
+    "recapcha",
+    "re-captcha",
+    "recaptcha turnstile",
+    "angular turnstile",
+    "angular recaptcha",
+    "angular captcha",
+    "free angular captcha",
+    "free captcha",
+    "free capcha",
+    "free recaptcha",
+    "free recapcha",
+    "ng turnstile",
+    "ng capcha",
+    "ng captcha",
+    "ng recapcha",
+    "ng recaptcha",
+    "ng",
+    "pangz",
     "pangzlab",
+    "pangz lab"
   ],
+  "homepage": "https://github.com/pangz-lab/ng-cloudflare-turnstile",
   "author": "Pangz",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pangz-lab/ng-cloudflare-turnstile/issues",
+    "email": "pangz.lab@gmail.com"
+  },
+  "funding": [
+    {
+      "type": "BuyMeACoffee",
+      "url": "https://buymeacoffee.com/pangzlab"
+    }
+  ]
 }
