@@ -42,3 +42,5 @@ testem.log
 Thumbs.db
 projects/ng-cloudflare-turnstile/build.sh
 projects/ng-cloudflare-turnstile-demo/build.sh
+.vscode
+.angular
