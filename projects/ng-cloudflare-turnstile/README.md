@@ -8,8 +8,6 @@ npm i @pangz/ng-cloudflare-turnstile
 ```
 
 ## Usage
-After installation you can simply include the needed types and classes to your Angular project.
-
 ### 1. Add the header classes
 In the logic class (i.e.)`example.component.ts`, include the following.
 ```ts
@@ -26,7 +24,8 @@ import {
 })
 ```
 ### 2. Configure the widget
-Add the widget configuration and the event listener method.
+Add the widget configuration and the event listener method.<br>
+( You need to get your own `siteKey` from the cloudflare dashboard. See <a href="#siteKeys">below</a> to use a development siteKey for testing. )
 ```ts
 export class ExampleComponent {
     config: Config = {
@@ -37,8 +36,19 @@ export class ExampleComponent {
     eventHandler(d: Result): void { console.log(d); }
 }
 ```
-You need to get your own `siteKey` from the cloudflare dashboard.<br>
-Alternatively, you can use the library-provided test `siteKey`s if you don't have one yet.<br>
+
+### 3. Include the component
+In the view file (i.e.)`example.component.html`, include the turnstile component.
+```html
+<ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>
+```
+
+That's all you need to have a working turnstile.
+
+
+### [ 🔑🔑🔑 Development SiteKeys ]
+<i id="siteKeys"></i>
+Alternatively, you can use the cloudflare test `siteKey`s if you don't have one yet.<br>
 Note that these are test keys especially used for development only.
 ( Make sure to get your own when you decide to put it in production. )
 ```ts
@@ -48,19 +58,78 @@ Note that these are test keys especially used for development only.
 - DevSiteKey.ALWAYS_BLOCKS_INVISIBLE
 - DevSiteKey.FORCE_INTERACTIVE_CHALLENGE
 ```
-### 3. Include the component
-In the view file (i.e.)`example.component.html`, include the turnstile component.
-```html
-<ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>
-```
-That's all you need to have a working turnstile.
 
 <br>
 <br>
+
+# Listening to events
+You might wanna do something when a particular event is triggered.<br>
+One way to do this is to check each state then add the logic that's specific for each state of events.
+```ts
+eventHandler(d: Result): void {
+    console.log(d);
+    switch (d.result) {
+        case State.WIDGET_CREATED: console.log("WIDGET_CREATED");break;
+        case State.WIDGET_RESET: console.log("WIDGET_RESET"); break;
+        case State.WIDGET_REMOVED: console.log("WIDGET_REMOVED"); break;
+        case State.SUCCESS: console.log("SUCCESS"); break;
+        case State.BEFORE_INTERACTIVE: console.log("BEFORE_INTERACTIVE"); break;
+        case State.AFTER_INTERACTIVE: console.log("AFTER_INTERACTIVE"); break;
+        case State.ERROR: console.log("ERROR"); break;
+        case State.EXPIRED: console.log("EXPIRED"); break;
+        case State.TIMEOUT: console.log("TIMEOUT"); break;
+        default: console.log("Unknown event");
+    }
+}
+```
+Apart from the `eventHandler`, the configuration enables you to add logic to events using callbacks.
+Configuration callbacks can be used for cases where you need to isolate your logic and make it more organized.
+( Detailed explanation can be found [here](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/). )
+
+|Built-in Callback            | Config Callback            | States                     |
+|:---                         | :---                       | :---                       |
+|`callback`                   | `onSuccess`                | `State.SUCCESS`            |
+|`error-callback`	          | `onError`                  | `State.ERROR`              |
+|`expired-callback`	          | `onExpired`                | `State.EXPIRED`            |
+|`before-interactive-callback`| `onBeforeInteractive`      | `State.BEFORE_INTERACTIVE` |
+|`after-interactive-callback` | `onAfterInteractive`       | `State.AFTER_INTERACTIVE`  |
+|`timeout-callback`           | `onTimeout`                | `State.TIMEOUT`            |
+
+Built-in callbacks might be enough for most cases but there are configuration that enables manual rendering which somehow made it hard to handle some logic. 
+For example, when retry is set to `never`, when an error occurred, you are left hanging and might not able to handle this scenario in a simpler way.
+A couple of new events are provided and can be listened to during the widget lifetime. Due to the nature of manual rendering, these extra callbacks (paired with the `TurnstileManager`) gives more flexibility and finer control in managing the widgets's life-cycle enabling to respond accordingly when these events happened.
+
+| Built-in Callback | Config Callback  |  States                    | Call Timing                         |
+| :---              | :---             | :---                       | :---                                |
+| `-`               | `onCreate`       | `State.WIDGET_CREATED`     | After the `render` method is called |
+| `-`               | `onReset`        | `State.WIDGET_RESET`       | After the `reset` method is called  |
+| `-`               | `onRemove`       | `State.WIDGET_REMOVED`     | After the `remove` methid is called |
+
+# Turnstile Manager
+You might be wondering, "what are the possible ways to handle cases where you need to rerender or remove a widget"? What's there to use?<br><br>
+Introducing - the `TurnstileManager`.<br><br>
+
+`TurnstileManager` provides `reRender`, `reset` and `remove` methods. `TurnstileManager` can be obtained from the `eventHandler` or from built-in and library-level-callbacks result using the `manager` key.<br><br>
+For example:
+### Using `eventHandler`
+```ts
+eventHandler(d: Result): void {
+    d.manager.reRender();
+}
+```
+or
+### Using `callback`
+```ts
+onTimeout: (d: Result): void => {
+    d.manager.remove();
+}
+```
+
+This class gives you more flexibility when widget is configured to be rendered manually.
 
 # Customization
-Cloudflare turnstile offers various [configuration options](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/) to match your needs.<br>
-The following are the configurations and library-provided classes you can use to customize the behavior of your widget.
+Cloudflare turnstile offers various [configuration options](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/) to meet your needs.<br>
+The following are configurations and library-provided classes you can use to customize the behavior of your widget.
 ```ts
 {
     siteKey: '',
@@ -89,53 +158,8 @@ The following are the configurations and library-provided classes you can use to
 };
 ```
 
-
-# Listening to events
-You might wanna do something when a particular event is triggered.<br>
-One way to do it is checking each state and add the logic designed for each state.
-```ts
-eventHandler(d: Result): void {
-    console.log(d);
-    switch (d.result) {
-        case State.WIDGET_CREATED: console.log("WIDGET_CREATED");break;
-        case State.WIDGET_RESET: console.log("WIDGET_RESET"); break;
-        case State.WIDGET_REMOVED: console.log("WIDGET_REMOVED"); break;
-        case State.SUCCESS: console.log("SUCCESS"); break;
-        case State.BEFORE_INTERACTIVE: console.log("BEFORE_INTERACTIVE"); break;
-        case State.AFTER_INTERACTIVE: console.log("AFTER_INTERACTIVE"); break;
-        case State.ERROR: console.log("ERROR"); break;
-        case State.EXPIRED: console.log("EXPIRED"); break;
-        case State.TIMEOUT: console.log("TIMEOUT"); break;
-        default: console.log("Unknown event");
-    }
-}
-```
-Apart from the `eventHandler`, the configuration allows you to add logic to specific events using callbacks.<br>
-Config callback can be used for cases where you need to isolate your logic or want to make it more organize.<br>
-Each callback is described in the following.<br>
-( Detailed information can be found [here](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/). )
-
-|Built-in Callback            | Config Callback            | States                     |
-|:---                         | :---                       | :---                       |
-|`callback`                   | `onSuccess`                | `State.SUCCESS`            |
-|`error-callback`	          | `onError`                  | `State.ERROR`              |
-|`expired-callback`	          | `onExpired`                | `State.EXPIRED`            |
-|`before-interactive-callback`| `onBeforeInteractive`      | `State.BEFORE_INTERACTIVE` |
-|`after-interactive-callback` | `onAfterInteractive`       | `State.AFTER_INTERACTIVE`  |
-|`timeout-callback`           | `onTimeout`                | `State.TIMEOUT`            |
-
-Built-in callbacks might be enough for your need but library-level-callbacks are provided to give you better flexibility.
-
-| Built-in Callback | Config Callback  |  States                    | Call Timing                         |
-| :---              | :---             | :---                       | :---                                |
-| `-`               | `onCreated`      | `State.WIDGET_CREATED`     | After the `render` method is called |
-| `-`               | `onReset`        | `State.WIDGET_RESET`       | After the `reset` method is called  |
-| `-`               | `onRemoved`      | `State.WIDGET_REMOVED`     | After the `remove` methid is called |
-
-Some configuration enables manual rendering so you might find these extra library-level-callback useful for such cases.
-
 # Utility Classes
-Complete list of classes and types you can use.
+Complete list of classes and types.
 ```ts
 import {
     NgCloudflareTurnstileComponent,
@@ -155,10 +179,18 @@ import {
 ```
 
 
+
+
+<br>
+<br>
+<p style="font-size: 20px;"> Please leave a <a href="https://github.com/pangz-lab/ng-cloudflare-turnstile">🌠star</a> if you love, like, happy, support or simply made your life easier of this project.</p>
+<br>
+<br>
+
 # Turnstile Playground
 You can visit the [ng-cloudflare-turnstile playground](https://pangz-lab.github.io/playground/ng-cloudflare-turnstile/) to try how each configuration works.
  ([source](https://github.com/pangz-lab/ng-cloudflare-turnstile/tree/main/projects/ng-cloudflare-turnstile-demo))<br><br>
-<a href="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/playground.png">
+<a href="https://pangz-lab.github.io/playground/ng-cloudflare-turnstile/">
     <img src="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/playground.png">
 </a>
 <br>

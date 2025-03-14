@@ -150,9 +150,9 @@ export type Config = {
     onBeforeInteractive?: EventCallback,
     onAfterInteractive?: EventCallback,
     onTimeout?: EventCallback,
-    onCreated?: EventCallback,
+    onCreate?: EventCallback,
     onReset?: EventCallback,
-    onRemoved?: EventCallback,
+    onRemove?: EventCallback,
 }
 
 export class TurnstileManager {
@@ -233,9 +233,9 @@ class EventHandler {
         onBeforeInteractive: (_: Result): void => {},
         onAfterInteractive: (_: Result): void => {},
         onTimeout: (_: Result): void => {},
-        onCreated: (_: Result): void => {},
+        onCreate: (_: Result): void => {},
         onReset: (_: Result): void => {},
-        onRemoved: (_: Result): void => {},
+        onRemove: (_: Result): void => {},
     };
 
     static init(e: EventEmitter<Result>, config: Config, manager: TurnstileManager, widgetId = ''): void {
@@ -307,9 +307,9 @@ export class NgCloudflareTurnstileComponent implements AfterViewInit, OnInit {
         onBeforeInteractive: (_: Result): void => {},
         onAfterInteractive: (_: Result): void => {},
         onTimeout: (_: Result): void => {},
-        onCreated: (_: Result): void => {},
+        onCreate: (_: Result): void => {},
         onReset: (_: Result): void => {},
-        onRemoved: (_: Result): void => {},
+        onRemove: (_: Result): void => {},
     };
     @Output() event = new EventEmitter<Result>();
     constructor() {
@@ -368,16 +368,16 @@ export class NgCloudflareTurnstileComponent implements AfterViewInit, OnInit {
                 onBeforeInteractive: conf.onBeforeInteractive,
                 onAfterInteractive: conf.onAfterInteractive,
                 onTimeout: conf.onTimeout,
-                onCreated: conf.onCreated,
+                onCreate: conf.onCreate,
                 onReset: conf.onReset,
-                onRemoved: conf.onRemoved,
+                onRemove: conf.onRemove,
             };
             const widgetId = window.turnstile.render(containerRef, renderingConf);
             EventHandler.setWidgetId(widgetId);
             EventHandler.copyWith({manager: new TurnstileManager(window.turnstile, EventHandler.e, widgetId, containerRef, renderingConf)});
 
             const payload = { name: 'WIDGET_CREATED', data: widgetId, result: State.WIDGET_CREATED, manager: EventHandler.manager};
-            EventHandler.conf.onCreated!(payload);
+            EventHandler.conf.onCreate!(payload);
             EventHandler.emit(payload);
         };
     }
