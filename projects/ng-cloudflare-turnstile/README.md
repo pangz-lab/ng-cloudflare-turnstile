@@ -1,6 +1,6 @@
 # ng-cloudflare-turnstile
 
-An intuitive, lightweight and easy to integrate captcha component for Angular.
+An intuitive, lightweight and easy to integrate [cloudflare-turnstile](https://developers.cloudflare.com/turnstile/) component for Angular.
 
 ## Install
 ```bash
