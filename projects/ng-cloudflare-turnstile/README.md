@@ -9,9 +9,16 @@
 <!-- ![Code Coverage](https://img.shields.io/codecov/c/github/pangz-lab/ng-cloudflare-turnstile?color=brightgreen&style=flat-square) -->
 <!-- ![GitHub Stars](https://img.shields.io/github/stars/pangz-lab/ng-cloudflare-turnstile?style=social) -->
 
+<a href="https://pangz-lab.github.io/playground/ng-cloudflare-turnstile/">
+    <img src="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/turnstile.png">
+</a>
+
+<br>
+<br>
+
 An intuitive, lightweight and easy to integrate [cloudflare-turnstile](https://developers.cloudflare.com/turnstile/) component for Angular.
 
-- This is a full implementation of cloudflare-turnstile for Angular. 
+- This is a full implementation of the cloudflare-turnstile for Angular. 
 - All properties and callbacks + other utilities are available for an easier integration.
 ## 📥 Install
 ```bash
@@ -36,7 +43,7 @@ import {
 ```
 ### 2. Widget Configuration
 Add the widget configuration and the event listener.<br>
-( You need to get your own `siteKey` from the cloudflare dashboard. See <a href="#siteKeys">below</a> to use a development siteKey for testing. )
+( You need to get your own `siteKey` from the cloudflare dashboard. <a href="#siteKeys">See below</a> to use a development siteKey for testing. )
 ```ts
 export class ExampleComponent {
     config: Config = {
@@ -79,7 +86,7 @@ export class ExampleComponent {
 That's all you need to have a working turnstile.
 
 
-### [ 🔑 Development SiteKeys ]
+### [ Development SiteKeys ]
 <i id="siteKeys"></i>
 Alternatively, you can use the cloudflare test `siteKey`s if you don't have one yet.<br>
 Note that these are test keys especially used for development.
@@ -119,7 +126,7 @@ eventHandler(d: Result): void {
 ```
 
 Note that you need a `secretKey` to verify the token from your server. This usually comes in pair when you generate from [cloudflare dashboard](https://developers.cloudflare.com/turnstile/get-started/).
-There are test tokens that are also available for development used. Feel free to try one.
+There are test tokens that are also available for development used.
 
 ```ts
 ALWAYS_PASSES = '1x0000000000000000000000000000000AA',
@@ -194,7 +201,7 @@ A couple of new events are made available which can also be listened to during t
 <br>
 <br>
 
-# 👨🏻‍✈️ Turnstile Manager
+# 👨🏻‍✈️ TurnstileManager
 You might be wondering, "what are the possible ways to handle cases where you need to rerender or remove a widget"? What's there to use?<br><br>
 Introducing - the `TurnstileManager`.<br><br>
 
@@ -214,7 +221,7 @@ onTimeout: (d: Result): void => {
 }
 ```
 
-These class adn callbacks gives you more flexibility when widget is configured to be rendered manually.
+These class and callbacks gives you more flexibility when widget is configured to be rendered manually.
 
 <br>
 <br>

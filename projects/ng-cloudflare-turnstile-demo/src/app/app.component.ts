@@ -12,7 +12,7 @@ import { NgCloudflareTurnstileComponent, Appearance, DevSiteKey, RefreshExpiry, 
 export class AppComponent implements OnInit {
     readonly viewConfig = {
         siteKey: { l: TurnstileViewElements.siteKey, default: DevSiteKey.FORCE_INTERACTIVE_CHALLENGE, raw: 'FORCE_INTERACTIVE_CHALLENGE'},
-        language: { l: TurnstileViewElements.language, default: Language.TAGALOG, raw: 'TAGALOG'},
+        language: { l: TurnstileViewElements.language, default: Language.ENGLISH, raw: 'ENGLISH'},
         theme: { l: TurnstileViewElements.theme, default: Theme.AUTO, raw: 'AUTO'},
         size: { l: TurnstileViewElements.size, default: Size.NORMAL, raw: 'NORMAL'},
         appearance: { l: TurnstileViewElements.appearance, default: Appearance.ALWAYS, raw: 'ALWAYS'},
@@ -58,9 +58,9 @@ export class AppComponent implements OnInit {
         onBeforeInteractive: (_: Result): void => { console.log("CONF onBeforeInteractive");},
         onAfterInteractive: (_: Result): void => { console.log("CONF onAfterInteractive");},
         onTimeout: (_: Result): void => { console.log("CONF onTimeout");},
-        onCreated: (_: Result): void => { console.log("CONF onCreated");},
+        onCreate: (_: Result): void => { console.log("CONF onCreate");},
         onReset: (_: Result): void => { console.log("CONF onReset");},
-        onRemoved: (_: Result): void => { console.log("CONF onRemoved");},
+        onRemove: (_: Result): void => { console.log("CONF onRemove");},
     }
 
     configChanges = {

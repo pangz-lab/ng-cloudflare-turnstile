@@ -164,7 +164,7 @@ export class TurnstileManager {
         this.widgetId = this.obj.render(this.containerRef, this.options);
         
         const payload = { name: 'WIDGET_CREATED', data: this.widgetId, result: State.WIDGET_CREATED, manager: this}
-        this.options.onCreated(payload);
+        this.options.onCreate(payload);
         this.event.emit(payload);
     }
 
@@ -180,7 +180,7 @@ export class TurnstileManager {
         this.obj.remove(id ?? this.widgetId);
 
         const payload = { name: 'WIDGET_REMOVED', data: id, result: State.WIDGET_REMOVED, manager: this};
-        this.options.onRemoved(payload);
+        this.options.onRemove(payload);
         this.event.emit(payload);
     }
 
