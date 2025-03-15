@@ -60,9 +60,19 @@
         background-color: #f0f0f0;
     }
     .container {
-        display: ruby-text;
+        display: flex;
+        flex-direction: column;  /* Stack elements vertically */
+        height: auto;           /* Allow height to adjust based on content */
     }
-
+    .controls {
+        width: 100%;           /* Full width on mobile */
+        box-sizing: border-box;
+    }
+    .output {
+        width: 100%;           /* Full width on mobile */
+        box-sizing: border-box;
+        flex-grow: 1;          /* Allow output to take available space */
+    }
     .out-desktop {
         display: none;
     }
@@ -70,7 +80,6 @@
         display: block;
     }
 }
-
 .ts-container {
     height: 160px;
     width: -webkit-fill-available;
@@ -211,7 +220,7 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: center;
 
-    font-size: 16px;
+    font-size: 14px;
     color: #232323; /* Text fill color */
     -webkit-text-stroke: 0.5px #f6821f; /* Stroke width and color */
     text-stroke: 0.5px #f6821f;
