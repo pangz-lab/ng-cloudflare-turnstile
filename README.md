@@ -1,15 +1,26 @@
 # ng-cloudflare-turnstile
 
+![NPM Version](https://img.shields.io/npm/v/@pangz/ng-cloudflare-turnstile?color=orange&style=flat-square)
+![NPM Total Downloads](https://img.shields.io/npm/dt/@pangz/ng-cloudflare-turnstile?color=blue&style=flat-square)
+![NPM Monthly Downloads](https://img.shields.io/npm/dm/@pangz/ng-cloudflare-turnstile?color=green&style=flat-square)
+![NPM License](https://img.shields.io/npm/l/@pangz/ng-cloudflare-turnstile?color=purple&style=flat-square)
+![Bundle Size](https://img.shields.io/bundlephobia/min/@pangz/ng-cloudflare-turnstile?color=cyan&style=flat-square)
+![GitHub Issues](https://img.shields.io/github/issues/pangz-lab/ng-cloudflare-turnstile?color=red&style=flat-square)
+<!-- ![Code Coverage](https://img.shields.io/codecov/c/github/pangz-lab/ng-cloudflare-turnstile?color=brightgreen&style=flat-square) -->
+<!-- ![GitHub Stars](https://img.shields.io/github/stars/pangz-lab/ng-cloudflare-turnstile?style=social) -->
+
 An intuitive, lightweight and easy to integrate [cloudflare-turnstile](https://developers.cloudflare.com/turnstile/) component for Angular.
 
-## Install
+- This a full implementation of cloudflare-turnstile for Angular. 
+- All properties and callbacks + other utilities are available for an easier integration.
+## 📥 Install
 ```bash
 npm i @pangz/ng-cloudflare-turnstile
 ```
 
-## Usage
-### 1. Add the header classes
-In the logic class (i.e.)`example.component.ts`, include the following.
+## 🚀 Usage
+### 1. Classes Import
+In the logic class (i.e.)`example.component.ts`, add the following.
 ```ts
 import {
     NgCloudflareTurnstileComponent,
@@ -23,8 +34,8 @@ import {
     ...
 })
 ```
-### 2. Configure the widget
-Add the widget configuration and the event listener method.<br>
+### 2. Widget Configuration
+Add the widget configuration and the event listener.<br>
 ( You need to get your own `siteKey` from the cloudflare dashboard. See <a href="#siteKeys">below</a> to use a development siteKey for testing. )
 ```ts
 export class ExampleComponent {
@@ -37,19 +48,41 @@ export class ExampleComponent {
 }
 ```
 
-### 3. Include the component
-In the view file (i.e.)`example.component.html`, include the turnstile component.
+### 3. Template Setup
+In the template or view file (i.e.)`example.component.html`, add the turnstile component.
 ```html
 <ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>
+```
+
+### [ Minimal Setup ]
+```ts
+import {
+    NgCloudflareTurnstileComponent,
+    Config,
+    Result
+} from 'ng-cloudflare-turnstile';
+
+@Component({
+    ...
+    imports: [NgCloudflareTurnstileComponent],
+    template: `<ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>`
+    ...
+})
+export class ExampleComponent {
+    config: Config = {
+        siteKey: XXXXXXXXXXXXXXXXXXXXXXXXXXX,
+    }
+    eventHandler(d: Result): void { console.log(d); }
+}
 ```
 
 That's all you need to have a working turnstile.
 
 
-### [ 🔑🔑🔑 Development SiteKeys ]
+### [ 🔑 Development SiteKeys ]
 <i id="siteKeys"></i>
 Alternatively, you can use the cloudflare test `siteKey`s if you don't have one yet.<br>
-Note that these are test keys especially used for development only.
+Note that these are test keys especially used for development.
 ( Make sure to get your own when you decide to put it in production. )
 ```ts
 - DevSiteKey.ALWAYS_PASSES
@@ -62,7 +95,43 @@ Note that these are test keys especially used for development only.
 <br>
 <br>
 
-# Listening to events
+# 🔐 Token Verification
+When challenge is successful, a success `token` is provided. This can be obtained from either the `onSuccess` callback or the `eventHandler`.
+You must verify the token from the server side to prove it's validity and more importantly to complete the process from the cloudflare dashboard.
+( [see here for ways to verify](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/) )
+```ts
+config: Config = {
+    onSuccess: (d: Result): void => {
+        const token = d.data;
+        // send to backend (together with your data) to verify
+    },
+}
+
+eventHandler(d: Result): void {
+    switch (d.result) {
+        case State.SUCCESS:
+            const token = d.data;
+            // send to backend (together with your data) to verify
+            break;
+        default: console.log("Unknown event");
+    }
+}
+```
+
+Note that you need a `secretKey` to verify the token from your server. This usually comes in pair when you generate from [cloudflare dashboard](https://developers.cloudflare.com/turnstile/get-started/).
+There are test tokens that are also available for development used. Feel free to try one.
+
+```ts
+ALWAYS_PASSES = '1x0000000000000000000000000000000AA',
+ALWAYS_FAILS = '2x0000000000000000000000000000000AA',
+TOKEN_ALREADY_SPENT = '3x0000000000000000000000000000000AA',
+```
+
+<br>
+<br>
+
+
+# 🔊 Listening to events
 You might wanna do something when a particular event is triggered.<br>
 One way to do this is to check each state then add the logic that's specific for each state of events.
 ```ts
@@ -82,9 +151,26 @@ eventHandler(d: Result): void {
     }
 }
 ```
-Apart from the `eventHandler`, the configuration enables you to add logic to events using callbacks.
-Configuration callbacks can be used for cases where you need to isolate your logic and make it more organized.
-( Detailed explanation can be found [here](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/). )
+
+Apart from the `eventHandler`, widget configuration enables you to add logic to events using callbacks.
+
+```ts
+config: Config = {
+    onSuccess: (_: Result): void => {},
+    onError: (_: Result): void => {},
+    onExpired: (_: Result): void => {},
+    onBeforeInteractive: (_: Result): void => {},
+    onAfterInteractive: (_: Result): void => {},
+    onTimeout: (_: Result): void => {},
+    onCreate: (_: Result): void => {},
+    onReset: (_: Result): void => {},
+    onRemove: (_: Result): void => {},
+}
+```
+
+For normal cases, you might use 2 to 3 of these callbacks at most.
+Configuration callbacks can be used for cases where you need to isolate your logic to have a better organization and readbility of your implementation.
+( [see here for details](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/). )
 
 |Built-in Callback            | Config Callback            | States                     |
 |:---                         | :---                       | :---                       |
@@ -95,9 +181,9 @@ Configuration callbacks can be used for cases where you need to isolate your log
 |`after-interactive-callback` | `onAfterInteractive`       | `State.AFTER_INTERACTIVE`  |
 |`timeout-callback`           | `onTimeout`                | `State.TIMEOUT`            |
 
-Built-in callbacks might be enough for most cases but there are configuration that enables manual rendering which somehow made it hard to handle some logic. 
-For example, when retry is set to `never`, when an error occurred, you are left hanging and might not able to handle this scenario in a simpler way.
-A couple of new events are provided and can be listened to during the widget lifetime. Due to the nature of manual rendering, these extra callbacks (paired with the `TurnstileManager`) gives more flexibility and finer control in managing the widgets's life-cycle enabling to respond accordingly when these events happened.
+Built-in callbacks might be enough for most cases but there are configuration that might be tricky especially when manual rendering is involved. 
+For example, when retry is set to `never`, when an error occurred, you code might be left hanging and might not able to respond in a straight-forward way.<br><br>
+A couple of new events are made available which can also be listened to during the widget's lifetime. Due to the nature of manual rendering, these extra callbacks (paired with the `TurnstileManager`) becomes handy allowing finer control over managing the widgets's life-cycle enabling you to respond accordingly when certain events ( that matter ) occurred.
 
 | Built-in Callback | Config Callback  |  States                    | Call Timing                         |
 | :---              | :---             | :---                       | :---                                |
@@ -105,11 +191,14 @@ A couple of new events are provided and can be listened to during the widget lif
 | `-`               | `onReset`        | `State.WIDGET_RESET`       | After the `reset` method is called  |
 | `-`               | `onRemove`       | `State.WIDGET_REMOVED`     | After the `remove` methid is called |
 
-# Turnstile Manager
+<br>
+<br>
+
+# 👨🏻‍✈️ Turnstile Manager
 You might be wondering, "what are the possible ways to handle cases where you need to rerender or remove a widget"? What's there to use?<br><br>
 Introducing - the `TurnstileManager`.<br><br>
 
-`TurnstileManager` provides `reRender`, `reset` and `remove` methods. `TurnstileManager` can be obtained from the `eventHandler` or from built-in and library-level-callbacks result using the `manager` key.<br><br>
+`TurnstileManager` provides `reRender`, `reset` and `remove` methods. `TurnstileManager` object can be obtained from the `eventHandler` or from built-in and library-level-callbacks result using the `manager` key.<br><br>
 For example:
 ### Using `eventHandler`
 ```ts
@@ -125,9 +214,12 @@ onTimeout: (d: Result): void => {
 }
 ```
 
-This class gives you more flexibility when widget is configured to be rendered manually.
+These class adn callbacks gives you more flexibility when widget is configured to be rendered manually.
 
-# Customization
+<br>
+<br>
+
+# 🧩 Customization
 Cloudflare turnstile offers various [configuration options](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/) to meet your needs.<br>
 The following are configurations and library-provided classes you can use to customize the behavior of your widget.
 ```ts
@@ -158,6 +250,9 @@ The following are configurations and library-provided classes you can use to cus
 };
 ```
 
+<br>
+<br>
+
 # Utility Classes
 Complete list of classes and types.
 ```ts
@@ -179,11 +274,11 @@ import {
 ```
 
 
-
-
 <br>
 <br>
-<p style="font-size: 20px;"> Please leave a <a href="https://github.com/pangz-lab/ng-cloudflare-turnstile">🌠star</a> if you love, like, happy, support or simply made your life easier of this project.</p>
+
+<p style="font-size: 20px;"> Please leave a <a href="https://github.com/pangz-lab/ng-cloudflare-turnstile">🌠star</a> if you support, love, like, or simply felt this made your life easier.</p>
+
 <br>
 <br>
 
@@ -193,6 +288,7 @@ You can visit the [ng-cloudflare-turnstile playground](https://pangz-lab.github.
 <a href="https://pangz-lab.github.io/playground/ng-cloudflare-turnstile/">
     <img src="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/playground.png">
 </a>
+
 <br>
 <br>
 <br>
@@ -201,6 +297,9 @@ You can visit the [ng-cloudflare-turnstile playground](https://pangz-lab.github.
 - ***Client Configuration*** : https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/
 - ***Error Codes*** : https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/
 - ***Cloudflare Repo*** :  https://github.com/cloudflare
+
+<br>
+<br>
 
 # Support Us
 Creating and maintaining a high-quality library is a labor of love that takes countless hours of coding, debugging, and community interaction. If this library has made your development easier, saved you time, or added value to your projects, consider supporting its ongoing growth and maintenance. Your contributions directly help keep this project alive, up-to-date, and evolving.
@@ -237,6 +336,8 @@ RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 ***ETH*** : 
 0xa248d188725c3b78af7e7e8cf4cfb8469e46cf3b
 
+<br>
+<br>
 
 # License
 This library is released under the [MIT License](https://github.com/pangz-lab/ng-cloudflare-turnstile/blob/main/LICENSE).
