@@ -61,7 +61,7 @@ In the template or view file (i.e.)`example.component.html`, add the turnstile c
 <ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>
 ```
 
-### [ Minimal Setup ]
+### [ Minimum Setup ]
 ```ts
 import {
     NgCloudflareTurnstileComponent,
