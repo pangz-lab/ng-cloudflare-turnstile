@@ -9,6 +9,13 @@
 <!-- ![Code Coverage](https://img.shields.io/codecov/c/github/pangz-lab/ng-cloudflare-turnstile?color=brightgreen&style=flat-square) -->
 <!-- ![GitHub Stars](https://img.shields.io/github/stars/pangz-lab/ng-cloudflare-turnstile?style=social) -->
 
+<a href="https://pangz-lab.github.io/playground/ng-cloudflare-turnstile/">
+    <img src="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/turnstile.png">
+</a>
+
+<br>
+<br>
+
 An intuitive, lightweight and easy to integrate [cloudflare-turnstile](https://developers.cloudflare.com/turnstile/) component for Angular.
 
 - This is a full implementation of the cloudflare-turnstile for Angular. 
