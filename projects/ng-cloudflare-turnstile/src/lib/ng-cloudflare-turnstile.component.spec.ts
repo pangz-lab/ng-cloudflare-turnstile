@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { NgCloudflareTurnstileComponent, TurnstileManager, Config, State } from './ng-cloudflare-turnstile.component';
+import { NgCloudflareTurnstile, TurnstileManager, Config, State } from './ng-cloudflare-turnstile.component';
 
 // Define the interface for the turnstile object to match the global declaration
 interface Turnstile {
@@ -10,8 +10,8 @@ interface Turnstile {
 }
 
 describe('NgCloudflareTurnstileComponent', () => {
-  let component: NgCloudflareTurnstileComponent;
-  let fixture: ComponentFixture<NgCloudflareTurnstileComponent>;
+  let component: NgCloudflareTurnstile;
+  let fixture: ComponentFixture<NgCloudflareTurnstile>;
   let mockTurnstile: jasmine.SpyObj<Turnstile>;
 
   beforeEach(async () => {
@@ -36,10 +36,10 @@ describe('NgCloudflareTurnstileComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      declarations: [NgCloudflareTurnstileComponent],
+      declarations: [NgCloudflareTurnstile],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NgCloudflareTurnstileComponent);
+    fixture = TestBed.createComponent(NgCloudflareTurnstile);
     component = fixture.componentInstance;
   });
 

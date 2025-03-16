@@ -10,7 +10,7 @@
 <!-- ![GitHub Stars](https://img.shields.io/github/stars/pangz-lab/ng-cloudflare-turnstile?style=social) -->
 
 <a href="https://pangz-lab.github.io/playground/ng-cloudflare-turnstile/">
-    <img src="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/turnstile.png">
+    <img src="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/turnstile.webp">
 </a>
 
 <br>
@@ -18,8 +18,9 @@
 
 An intuitive, lightweight and easy to integrate [cloudflare-turnstile](https://developers.cloudflare.com/turnstile/) component for Angular.
 
-- This is a full implementation of the cloudflare-turnstile for Angular. 
-- All properties and callbacks + other utilities are available for an easier integration.
+- Easy to use Angular cloudflare-turnstile component. 
+- Fully supports the official library properties and callbacks.
+- Utilities and classes are provided for an easier integration and user-experience.
 ## 📥 Install
 ```bash
 npm i @pangz/ng-cloudflare-turnstile
@@ -30,14 +31,14 @@ npm i @pangz/ng-cloudflare-turnstile
 In the logic class (i.e.)`example.component.ts`, add the following.
 ```ts
 import {
-    NgCloudflareTurnstileComponent,
+    NgCloudflareTurnstile,
     Config,
     Result
 } from 'ng-cloudflare-turnstile';
 
 @Component({
     ...
-    imports: [NgCloudflareTurnstileComponent],
+    imports: [NgCloudflareTurnstile],
     ...
 })
 ```
@@ -64,14 +65,14 @@ In the template or view file (i.e.)`example.component.html`, add the turnstile c
 ### [ Minimum Setup ]
 ```ts
 import {
-    NgCloudflareTurnstileComponent,
+    NgCloudflareTurnstile,
     Config,
     Result
 } from 'ng-cloudflare-turnstile';
 
 @Component({
     ...
-    imports: [NgCloudflareTurnstileComponent],
+    imports: [NgCloudflareTurnstile],
     template: `<ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>`
     ...
 })
@@ -189,7 +190,7 @@ Configuration callbacks can be used for cases where you need to isolate your log
 |`timeout-callback`           | `onTimeout`                | `State.TIMEOUT`            |
 
 Built-in callbacks might be enough for most cases but there are configuration that might be tricky especially when manual rendering is involved. 
-For example, when retry is set to `never`, when an error occurred, you code might be left hanging and might not able to respond in a straight-forward way.<br><br>
+For example, when retry is set to `never`, when an error occurred, your code might be left hanging and might not able to respond in a straight-forward way.<br><br>
 A couple of new events are made available which can also be listened to during the widget's lifetime. Due to the nature of manual rendering, these extra callbacks (paired with the `TurnstileManager`) becomes handy allowing finer control over managing the widgets's life-cycle enabling you to respond accordingly when certain events ( that matter ) occurred.
 
 | Built-in Callback | Config Callback  |  States                    | Call Timing                         |
@@ -264,7 +265,7 @@ The following are configurations and library-provided classes you can use to cus
 Complete list of classes and types.
 ```ts
 import {
-    NgCloudflareTurnstileComponent,
+    NgCloudflareTurnstile,
     Config,
     Result,
     DevSiteKey,

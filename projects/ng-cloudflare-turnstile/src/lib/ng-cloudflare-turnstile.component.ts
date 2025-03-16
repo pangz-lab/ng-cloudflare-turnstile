@@ -279,7 +279,7 @@ class EventHandler {
     template: `<div id="cf-container"></div>`,
     styles: ``
 })
-export class NgCloudflareTurnstileComponent implements AfterViewInit, OnInit {
+export class NgCloudflareTurnstile implements AfterViewInit, OnInit {
     @Input() config: Config = {
         siteKey: '',
         action: '',

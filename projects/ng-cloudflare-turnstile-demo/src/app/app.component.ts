@@ -1,11 +1,11 @@
 import { Component, type OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgCloudflareTurnstileComponent, Appearance, DevSiteKey, RefreshExpiry, RefreshTimeout, Retry, Size, Theme, type Config, type Result, Language, State, type TurnstileManager } from 'ng-cloudflare-turnstile';
+import { NgCloudflareTurnstile, Appearance, DevSiteKey, RefreshExpiry, RefreshTimeout, Retry, Size, Theme, type Config, type Result, Language, State, type TurnstileManager } from 'ng-cloudflare-turnstile';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [NgCloudflareTurnstileComponent, ReactiveFormsModule, FormsModule],
+    imports: [NgCloudflareTurnstile, ReactiveFormsModule, FormsModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
