@@ -1,15 +1,19 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, type OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgCloudflareTurnstile, Appearance, DevSiteKey, RefreshExpiry, RefreshTimeout, Retry, Size, Theme, type Config, type Result, Language, State, type TurnstileManager } from 'ng-cloudflare-turnstile';
+import { CaptchaComponent } from "../captcha/captcha.component";
+import { LibLabelComponent } from "../lib-label/lib-label.component";
+import { LibTitleComponent } from "../lib-title/lib-title.component";
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [NgCloudflareTurnstile, ReactiveFormsModule, FormsModule],
+    imports: [NgCloudflareTurnstile, ReactiveFormsModule, FormsModule, CaptchaComponent, LibLabelComponent, LibTitleComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
+    constructor(private cdr: ChangeDetectorRef) {}
     readonly viewConfig = {
         siteKey: { l: TurnstileViewElements.siteKey, default: DevSiteKey.FORCE_INTERACTIVE_CHALLENGE, raw: 'FORCE_INTERACTIVE_CHALLENGE'},
         language: { l: TurnstileViewElements.language, default: Language.ENGLISH, raw: 'ENGLISH'},
@@ -71,6 +75,12 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         EventLogger.init(this.inEventLogger, this.inPayloadLogger);
         this.initSubscription();
+    }
+
+    isVerified = false;
+    onVerified(r: boolean): void {
+        this.isVerified = true;
+        this.cdr.detectChanges();
     }
 
     conf(): string { return JSON.stringify(this.config, null, 2); }

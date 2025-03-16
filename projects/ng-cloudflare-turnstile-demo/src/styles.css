@@ -190,6 +190,7 @@ input:checked + .slider:before {
 .text-area-cont {
     border-radius: 10px;
     width: -webkit-fill-available;
+    width: -moz-available;         /* Mozilla Firefox */
     border: 1px solid #fd7d10;
     scrollbar-width: thin;
     padding: 10px;

@@ -1,7 +1,24 @@
 <!-- <div class="center-wrapper-head">fasdfa</div> -->
+@if(!isVerified) {
+    <div class="ctrls">
+        <div class="center-wrapper" style="text-align: center; justify-content: center; display: block; height: 100%; width: 100%; padding: 20px;">
+            <app-captcha (onVerified)="onVerified($event)"></app-captcha>
+            <app-lib-title></app-lib-title>
+            <div class="footer">
+                <app-lib-label></app-lib-label>
+            </div>
+        </div>
+    </div>
+} @else {
 <div class="ctrls">
     <div class="center-wrapper">
         <div class="container">
+            <div class="out-mobile">
+                <app-lib-title></app-lib-title>
+                <div class="footer">
+                    <app-lib-label></app-lib-label>
+                </div>
+            </div>
             <div class="controls">
                 <div class="control-item">
                     <label for="dropdown1">Site Key</label>
@@ -137,28 +154,19 @@
 
             <!-- <div class="output out-desktop"> -->
             <div class="output">
-                <div class="center-wrapper-head out-desktop">
-                    <h2>ng-cloudflare-turnstile</h2>
-                    <a href="https://github.com/pangz-lab/ng-cloudflare-turnstile" target="_blank">
-                        <img src="https://www.pngmart.com/files/23/Github-Logo-PNG-File.png" 
-                        alt="GitHub Repository" 
-                        class="link-image">
-                    </a>
-                    <a href="https://www.npmjs.com/package/@pangz/ng-cloudflare-turnstile" target="_blank">
-                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcBAMAAACAI8KnAAAAKlBMVEXLAADKAADMExPVTU3USUn////eenrghobfgYHst7fFAADJAADhi4vPJibZA+ujAAAAUklEQVR4AWMgETAKQoEAmKvsAgVGYEnTUCgIFmBgYmAQgOtiAHERACdXSNkBmevi/AGZyxrwAU3v4OJ+gLACGP7DA8dZgOGyixEi6ECUAIlhDgBlbQ7lGaBp1QAAAABJRU5ErkJggg==" 
-                        alt="NPM Package" 
-                        class="link-image">
-                    </a>
+                <div class="out-desktop">
+                    <app-lib-title></app-lib-title>
                 </div>
                 <div class="ts-container" [style]="inSize.value !== 'FLEXIBLE' ? 'display: flex' : ''">
                     <div style="padding: 20px">
 
                         @if(inSiteKey.value?.toUpperCase()?.includes('0000BB')) {
-                            <div style="color: red; font-size: 12px;">⚠️ SELECTED TEST KEY WILL RENDER THE WIDGET INVISIBLE</div>
+                        <div style="color: red; font-size: 12px;">⚠️ SELECTED TEST KEY WILL RENDER THE WIDGET INVISIBLE
+                        </div>
                         }
                         @if(inRetry.value?.toUpperCase()?.includes('NEVER')) {
-                            <div style="color: red; font-size: 12px;">⚠️ RETRY "NEVER" WILL NOT RENDER A NEW WIDGET ON ERROR
-                            </div>
+                        <div style="color: red; font-size: 12px;">⚠️ RETRY "NEVER" WILL NOT RENDER A NEW WIDGET ON ERROR
+                        </div>
                         }
                         <ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)">
                         </ng-cloudflare-turnstile>
@@ -178,26 +186,8 @@
                 </div>
 
                 <div class="footer out-mobile">
-                    <div class="center-wrapper-head">
-                        <h2>ng-cloudflare-turnstile</h2>
-                        <a href="https://github.com/pangz-lab/ng-cloudflare-turnstile" target="_blank">
-                            <img src="https://www.pngmart.com/files/23/Github-Logo-PNG-File.png" 
-                            alt="GitHub Repository" 
-                            class="link-image">
-                        </a>
-                        <a href="https://www.npmjs.com/package/@pangz/ng-cloudflare-turnstile" target="_blank">
-                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcBAMAAACAI8KnAAAAKlBMVEXLAADKAADMExPVTU3USUn////eenrghobfgYHst7fFAADJAADhi4vPJibZA+ujAAAAUklEQVR4AWMgETAKQoEAmKvsAgVGYEnTUCgIFmBgYmAQgOtiAHERACdXSNkBmevi/AGZyxrwAU3v4OJ+gLACGP7DA8dZgOGyixEi6ECUAIlhDgBlbQ7lGaBp1QAAAABJRU5ErkJggg==" 
-                            alt="NPM Package" 
-                            class="link-image">
-                        </a>
-                    </div>
-                    <span style="padding: 5px; font-size: 12px;">
-                        An intuitive, lightweight and easy to integrate <a href="https://developers.cloudflare.com/turnstile/">cloudflare-turnstile</a> component for Angular.
-                    </span>
-                    <br>
-                    <img style="padding: 2px;" src="https://img.shields.io/npm/v/@pangz/ng-cloudflare-turnstile" alt="npm version">
-                    <img style="padding: 2px;" src="https://img.shields.io/npm/dt/@pangz/ng-cloudflare-turnstile" alt="npm downloads">
-                    <img style="padding: 2px;" src="https://img.shields.io/npm/l/@pangz/ng-cloudflare-turnstile" alt="npm license">
+                    <app-lib-title></app-lib-title>
+                    <app-lib-label></app-lib-label>
                 </div>
             </div>
 
@@ -255,12 +245,8 @@
             </div>
         </div>
         <div class="footer out-desktop">
-            <span style="padding: 5px; font-size: 12px;">
-                An intuitive, lightweight and easy to integrate <a href="https://developers.cloudflare.com/turnstile/">cloudflare-turnstile</a> component for Angular.
-            </span>
-            <br>
-            <img style="padding: 2px;" src="https://img.shields.io/npm/v/@pangz/ng-cloudflare-turnstile" alt="npm version">
-            <img style="padding: 2px;" src="https://img.shields.io/npm/dt/@pangz/ng-cloudflare-turnstile" alt="npm downloads">
-            <img style="padding: 2px;" src="https://img.shields.io/npm/l/@pangz/ng-cloudflare-turnstile" alt="npm license">
+            <app-lib-label></app-lib-label>
         </div>
     </div>
+</div>
+}
