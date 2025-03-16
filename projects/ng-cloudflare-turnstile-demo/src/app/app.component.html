@@ -13,7 +13,7 @@
 <div class="ctrls">
     <div class="center-wrapper">
         <div class="container">
-            <div class="out-mobile">
+            <div class="out-mobile" style="padding-top: 40px;">
                 <app-lib-title></app-lib-title>
                 <div class="footer">
                     <app-lib-label></app-lib-label>
@@ -137,7 +137,7 @@
                 <div>
                     <br><i class="ta-header-text">Configuration</i>
                     <div class="ts-conf-container">
-                        <pre>{{conf()}}</pre>
+                        <pre>{{conf}}</pre>
                     </div>
                     <div class="ts-conf-container-bottom">
                         @if(configChanges.name !== '') {
@@ -230,7 +230,7 @@
                 <div>
                     <br><i class="ta-header-text">Configuration</i>
                     <div class="ts-conf-container">
-                        <pre>{{conf()}}</pre>
+                        <pre>{{conf}}</pre>
                     </div>
                     <div class="ts-conf-container-bottom">
                         @if(configChanges.name !== '') {

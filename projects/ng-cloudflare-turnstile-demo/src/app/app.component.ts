@@ -24,22 +24,6 @@ export class AppComponent implements OnInit {
         refreshExpiry: { l: TurnstileViewElements.refreshExpiry, default: RefreshExpiry.AUTO, raw: 'AUTO'},
         refreshTimeout: { l: TurnstileViewElements.refreshTimeout, default: RefreshTimeout.AUTO, raw: 'AUTO'},
     }
-    inSiteKey = new FormControl('');
-    inLanguage = new FormControl('');
-    inTheme = new FormControl('');
-    inSize = new FormControl('');
-    inAppearance = new FormControl('');
-    inRetry = new FormControl('');
-    inRetryInterval = new FormControl('');
-    inRefreshExpiry = new FormControl('');
-    inRefreshTimeout = new FormControl('');
-    inAction = new FormControl('');
-    inCData = new FormControl('');
-    inTabIndex = new FormControl('');
-    inResponseField = new FormControl('');
-    inFeedbackEnabled = new FormControl('');
-    inEventLogger = new FormControl('');
-    inPayloadLogger = new FormControl('');
 
     config: Config = {
         siteKey: this.viewConfig.siteKey.default,
@@ -54,8 +38,8 @@ export class AppComponent implements OnInit {
         action: '',
         cData: '',
         tabIndex: 0,
-        feedbackEnabled: true,
         responseField: true,
+        feedbackEnabled: true,
         onSuccess: (_: Result): void => { console.log("CONF onSuccess");},
         onError: (_: Result): void => { console.log("CONF onError");},
         onExpired: (_: Result): void => { console.log("CONF onExpired");},
@@ -66,6 +50,23 @@ export class AppComponent implements OnInit {
         onReset: (_: Result): void => { console.log("CONF onReset");},
         onRemove: (_: Result): void => { console.log("CONF onRemove");},
     }
+
+    inSiteKey = new FormControl(this.config.siteKey);
+    inLanguage = new FormControl(this.viewConfig.language.raw);
+    inTheme = new FormControl(this.viewConfig.theme.raw);
+    inSize = new FormControl(this.viewConfig.size.raw);
+    inAppearance = new FormControl(this.viewConfig.appearance.raw);
+    inRetry = new FormControl(this.viewConfig.retry.raw);
+    inRetryInterval = new FormControl(this.config.retryInterval?.toString() ?? '');
+    inRefreshExpiry = new FormControl(this.viewConfig.refreshExpiry.raw);
+    inRefreshTimeout = new FormControl(this.viewConfig.refreshTimeout.raw);
+    inAction = new FormControl(this.config.action ?? '');
+    inCData = new FormControl(this.config.cData ?? '');
+    inTabIndex = new FormControl(this.config.tabIndex?.toString() ?? '');
+    inResponseField = new FormControl(this.config.responseField ?? true);
+    inFeedbackEnabled = new FormControl(this.config.feedbackEnabled ?? true);
+    inEventLogger = new FormControl('');
+    inPayloadLogger = new FormControl('');
 
     configChanges = {
         name: '',
@@ -83,7 +84,7 @@ export class AppComponent implements OnInit {
         this.cdr.detectChanges();
     }
 
-    conf(): string { return JSON.stringify(this.config, null, 2); }
+    conf: string = JSON.stringify(this.config, null, 2);
 
     eventHandler(d: Result): void {
         console.log(d);
@@ -106,24 +107,26 @@ export class AppComponent implements OnInit {
     }
 
     private logConfigUpdate(name: string, from: string, to: string): void {
-        this.configChanges.name = name;
-        this.configChanges.from = from;
-        this.configChanges.to = to;
+        this.configChanges = {name: name, from: from, to: to};
+        this.conf = JSON.stringify(this.config, null, 2);
+        this.cdr.detectChanges();
     }
+    
     private initSubscription(): void {
-        this.inSiteKey.setValue(this.config.siteKey);
-        this.inAction.setValue(this.config.action ?? '');
-        this.inCData.setValue(this.config.cData ?? '');
-        this.inTabIndex.setValue(this.config.tabIndex?.toString() ?? '');
-        this.inLanguage.setValue(this.viewConfig.language.raw);
-        this.inTheme.setValue(this.viewConfig.theme.raw);
-        this.inSize.setValue(this.viewConfig.size.raw);
-        this.inAppearance.setValue(this.viewConfig.appearance.raw);
-        this.inRetry.setValue(this.viewConfig.retry.raw);
-        this.inRetryInterval.setValue(this.config.retryInterval?.toString() ?? '');
-        this.inRefreshExpiry.setValue(this.viewConfig.refreshExpiry.raw);
-        this.inRefreshTimeout.setValue(this.viewConfig.refreshTimeout.raw);
-        this.inFeedbackEnabled.setValue(this.config.feedbackEnabled?.toString() ?? '');
+        // this.inSiteKey.setValue(this.config.siteKey);
+        // this.inLanguage.setValue(this.viewConfig.language.raw);
+        // this.inTheme.setValue(this.viewConfig.theme.raw);
+        // this.inSize.setValue(this.viewConfig.size.raw);
+        // this.inAppearance.setValue(this.viewConfig.appearance.raw);
+        // this.inRetry.setValue(this.viewConfig.retry.raw);
+        // this.inRetryInterval.setValue(this.config.retryInterval?.toString() ?? '');
+        // this.inRefreshExpiry.setValue(this.viewConfig.refreshExpiry.raw);
+        // this.inRefreshTimeout.setValue(this.viewConfig.refreshTimeout.raw);
+        // this.inAction.setValue(this.config.action ?? '');
+        // this.inCData.setValue(this.config.cData ?? '');
+        // this.inTabIndex.setValue(this.config.tabIndex?.toString() ?? '');
+        // this.inResponseField.setValue(this.config.responseField ?? true);
+        // this.inFeedbackEnabled.setValue(this.config.feedbackEnabled ?? true);
         
         this.inSiteKey.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
@@ -236,7 +239,7 @@ export class AppComponent implements OnInit {
         this.inResponseField.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
-            const newValue = (value ? true : false);
+            const newValue = value === true;
             this.logConfigUpdate('responseField', (this.config.responseField ?? '').toString(), newValue.toString());
             this.config.responseField = newValue;
             Turnstile.manager!.reRender(this.config);
@@ -245,7 +248,7 @@ export class AppComponent implements OnInit {
         this.inFeedbackEnabled.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
-            const newValue = (value ? true : false);
+            const newValue = value === true;
             this.logConfigUpdate('feedbackEnabled', (this.config.feedbackEnabled ?? '').toString(), newValue.toString());
             this.config.feedbackEnabled = newValue;
             Turnstile.manager!.reRender(this.config);
