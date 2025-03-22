@@ -78,10 +78,12 @@ export class ExampleComponent {
 
 That's all you need to have a working turnstile.
 
+<br>
+<br>
 
-### [ 🔑 Development SiteKeys ]
+## 🔑 Development SiteKeys
 <i id="siteKeys"></i>
-Alternatively, you can use the cloudflare test `siteKey`s if you don't have one yet.<br>
+You can use the cloudflare test `siteKey`s if you don't have yours yet alternatively.<br>
 Note that these are test keys especially used for development.
 ( Make sure to get your own when you decide to put it in production. )
 ```ts
@@ -194,7 +196,7 @@ A couple of new events are made available which can also be listened to during t
 <br>
 <br>
 
-# 👨🏻‍✈️ Turnstile Manager
+# 🕹 Turnstile Manager
 You might be wondering, "what are the possible ways to handle cases where you need to rerender or remove a widget"? What's there to use?<br><br>
 Introducing - the `TurnstileManager`.<br><br>
 
@@ -214,7 +216,7 @@ onTimeout: (d: Result): void => {
 }
 ```
 
-These class adn callbacks gives you more flexibility when widget is configured to be rendered manually.
+These class and callbacks gives you more flexibility when widget is configured to be rendered manually.
 
 <br>
 <br>
