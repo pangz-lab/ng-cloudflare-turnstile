@@ -34,7 +34,7 @@ import {
     NgCloudflareTurnstile,
     Config,
     Result
-} from 'ng-cloudflare-turnstile';
+} from '@pangz/ng-cloudflare-turnstile';
 
 @Component({
     ...
@@ -68,7 +68,7 @@ import {
     NgCloudflareTurnstile,
     Config,
     Result
-} from 'ng-cloudflare-turnstile';
+} from '@pangz/ng-cloudflare-turnstile';
 
 @Component({
     ...
@@ -278,7 +278,7 @@ import {
     RefreshTimeout,
     State,
     TurnstileManager
-} from 'ng-cloudflare-turnstile';
+} from '@pangz/ng-cloudflare-turnstile';
 ```
 
 

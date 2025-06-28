@@ -327,32 +327,32 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit {
                 'feedback-enabled': conf.feedbackEnabled,
                 callback: (token: any) => {
                     const payload = { name: 'SUCCESS', data: token, result: State.SUCCESS, manager: EventHandler.manager};
-                    EventHandler.conf.onSuccess!(payload);
+                    if(EventHandler.conf.onSuccess !== undefined) { EventHandler.conf.onSuccess!(payload); }
                     EventHandler.emit(payload);
                 },
                 'error-callback': (code: any) => {
                     const payload = { name: 'ERROR', data: code, result: State.ERROR, manager: EventHandler.manager };
-                    EventHandler.conf.onError!(payload);
+                    if(EventHandler.conf.onError !== undefined) { EventHandler.conf.onError!(payload); }
                     EventHandler.emit(payload);
                 },
                 'expired-callback': (d: any) => {
                     const payload = { name: 'EXPIRED', data: d, result: State.EXPIRED, manager: EventHandler.manager };
-                    EventHandler.conf.onExpired!(payload);
+                    if(EventHandler.conf.onExpired !== undefined) { EventHandler.conf.onExpired!(payload); }
                     EventHandler.emit(payload);
                 },
                 'before-interactive-callback': (d: any) => {
                     const payload = { name: 'BEFORE_INTERACTIVE', data: d, result: State.BEFORE_INTERACTIVE, manager: EventHandler.manager };
-                    EventHandler.conf.onBeforeInteractive!(payload);
+                    if(EventHandler.conf.onBeforeInteractive !== undefined) { EventHandler.conf.onBeforeInteractive!(payload); }
                     EventHandler.emit(payload);
                 },
                 'after-interactive-callback': (d: any) => {
                     const payload = { name: 'AFTER_INTERACTIVE', data: d, result: State.AFTER_INTERACTIVE, manager: EventHandler.manager };
-                    EventHandler.conf.onAfterInteractive!(payload);
+                    if(EventHandler.conf.onAfterInteractive !== undefined) { EventHandler.conf.onAfterInteractive!(payload); }
                     EventHandler.emit(payload);
                 },
                 'timeout-callback': (d: any) => {
                     const payload = { name: 'TIMEOUT', data: d, result: State.TIMEOUT, manager: EventHandler.manager };
-                    EventHandler.conf.onTimeout!(payload);
+                    if(EventHandler.conf.onTimeout !== undefined) { EventHandler.conf.onTimeout!(payload); }
                     EventHandler.emit(payload);
                 },
                 // Add the custom callback
@@ -371,7 +371,7 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit {
             EventHandler.copyWith({manager: new TurnstileManager(window.turnstile, EventHandler.e, widgetId, containerRef, renderingConf)});
 
             const payload = { name: 'WIDGET_CREATED', data: widgetId, result: State.WIDGET_CREATED, manager: EventHandler.manager};
-            EventHandler.conf.onCreate!(payload);
+            if(EventHandler.conf.onCreate !== undefined) { EventHandler.conf.onCreate!(payload); }
             EventHandler.emit(payload);
         };
     }
