@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start_demo": "ng serve ng-cloudflare-turnstile-demo",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
