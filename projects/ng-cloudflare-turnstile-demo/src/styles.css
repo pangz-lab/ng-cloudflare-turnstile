@@ -217,7 +217,7 @@ input:checked + .slider:before {
     /* border: 1px dashed orangered; */
     text-align: center;
     padding: 2px;
-    display: flex;
+    display: contents;
     align-items: center;
     justify-content: center;
 
