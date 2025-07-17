@@ -1,14 +1,15 @@
-import { Component, ChangeDetectorRef, type OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, type OnInit, signal, type WritableSignal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgCloudflareTurnstile, Appearance, DevSiteKey, RefreshExpiry, RefreshTimeout, Retry, Size, Theme, type Config, type Result, Language, State, type TurnstileManager } from 'ng-cloudflare-turnstile';
 import { CaptchaComponent } from "../captcha/captcha.component";
 import { LibLabelComponent } from "../lib-label/lib-label.component";
 import { LibTitleComponent } from "../lib-title/lib-title.component";
+import { ClipboardComponent } from "../clipboard/clipboard.component";
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [NgCloudflareTurnstile, ReactiveFormsModule, FormsModule, CaptchaComponent, LibLabelComponent, LibTitleComponent],
+    imports: [NgCloudflareTurnstile, ReactiveFormsModule, FormsModule, CaptchaComponent, LibLabelComponent, LibTitleComponent, ClipboardComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
@@ -71,7 +72,8 @@ export class AppComponent implements OnInit {
     configChanges = {
         name: '',
         from: '',
-        to: '' 
+        to: '' ,
+        conf: this.convertJsonConfigToObject(this.config)
     };
     ngOnInit(): void {
         EventLogger.init(this.inEventLogger, this.inPayloadLogger);
@@ -83,8 +85,6 @@ export class AppComponent implements OnInit {
         this.isVerified = true;
         this.cdr.detectChanges();
     }
-
-    conf: string = JSON.stringify(this.config, null, 2);
 
     eventHandler(d: Result): void {
         console.log(d);
@@ -106,151 +106,155 @@ export class AppComponent implements OnInit {
         }
     }
 
-    private logConfigUpdate(name: string, from: string, to: string): void {
-        this.configChanges = {name: name, from: from, to: to};
-        this.conf = JSON.stringify(this.config, null, 2);
+    private logConfigUpdate(name: string, from: string, to: string, conf: Config): void {
+        this.configChanges = {name: name, from: from, to: to, conf: this.convertJsonConfigToObject(conf)};
         this.cdr.detectChanges();
+    }
+
+    private convertJsonConfigToObject(conf: Config): string {
+        const formattedConf = JSON.stringify(conf, null, 2);
+        return formattedConf.replace(/"([^"]+)":/g, '$1:');
     }
     
     private initSubscription(): void {
-        // this.inSiteKey.setValue(this.config.siteKey);
-        // this.inLanguage.setValue(this.viewConfig.language.raw);
-        // this.inTheme.setValue(this.viewConfig.theme.raw);
-        // this.inSize.setValue(this.viewConfig.size.raw);
-        // this.inAppearance.setValue(this.viewConfig.appearance.raw);
-        // this.inRetry.setValue(this.viewConfig.retry.raw);
-        // this.inRetryInterval.setValue(this.config.retryInterval?.toString() ?? '');
-        // this.inRefreshExpiry.setValue(this.viewConfig.refreshExpiry.raw);
-        // this.inRefreshTimeout.setValue(this.viewConfig.refreshTimeout.raw);
-        // this.inAction.setValue(this.config.action ?? '');
-        // this.inCData.setValue(this.config.cData ?? '');
-        // this.inTabIndex.setValue(this.config.tabIndex?.toString() ?? '');
-        // this.inResponseField.setValue(this.config.responseField ?? true);
-        // this.inFeedbackEnabled.setValue(this.config.feedbackEnabled ?? true);
         
         this.inSiteKey.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.siteKey;
             const newValue = value ?? '';
-            this.logConfigUpdate('siteKey', this.config.siteKey, newValue);
             this.config.siteKey = newValue;
+            this.logConfigUpdate('siteKey', oldValue, newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inLanguage.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.language;
             const newValue = TurnstileViewElements.getLanguageFromKey(value as keyof typeof Language);;
-            this.logConfigUpdate('language', (this.config.language ?? '').toString(), newValue);
             this.config.language = newValue;
+            this.logConfigUpdate('language', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inTheme.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.theme;
             const newValue = TurnstileViewElements.getThemeFromKey(value as keyof typeof Theme);
-            this.logConfigUpdate('theme', (this.config.theme ?? '').toString(), newValue);
             this.config.theme = newValue;
+            this.logConfigUpdate('theme', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inSize.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.size;
             const newValue = TurnstileViewElements.getSizeFromKey(value as keyof typeof Size);
-            this.logConfigUpdate('size', (this.config.size ?? '').toString(), newValue);
             this.config.size = newValue;
+            this.logConfigUpdate('size', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inAppearance.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.appearance;
             const newValue = TurnstileViewElements.getAppearanceFromKey(value as keyof typeof Appearance);
-            this.logConfigUpdate('appearance', (this.config.appearance ?? '').toString(), newValue);
             this.config.appearance = newValue;
+            this.logConfigUpdate('appearance', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inRetry.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.retry;
             const newValue = TurnstileViewElements.getRetryFromKey(value as keyof typeof Retry);
-            this.logConfigUpdate('retry', (this.config.retry ?? '').toString(), newValue);
             this.config.retry = newValue;
+            this.logConfigUpdate('retry', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inRetryInterval.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
+            const oldValue = this.config.retryInterval;
             const newValue = parseInt(value?.toString() ?? '0');
-            this.logConfigUpdate('retryInterval', (this.config.retryInterval ?? '').toString(), newValue.toString());
             this.config.retryInterval = newValue;
+            this.logConfigUpdate('retryInterval', (oldValue ?? '').toString(), newValue.toString(), this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inRefreshExpiry.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.refreshExpired;
             const newValue = TurnstileViewElements.getRefreshExpiryFromKey(value as keyof typeof RefreshExpiry);
-            this.logConfigUpdate('refreshExpired', (this.config.refreshExpired ?? '').toString(), newValue);
             this.config.refreshExpired = newValue;
+            this.logConfigUpdate('refreshExpired', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inRefreshTimeout.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
             
+            const oldValue = this.config.refreshTimeout;
             const newValue = TurnstileViewElements.getRefreshTimeoutFromKey(value as keyof typeof RefreshTimeout);
-            this.logConfigUpdate('refreshTimeout', (this.config.refreshTimeout ?? '').toString(), newValue);
             this.config.refreshTimeout = newValue;
+            this.logConfigUpdate('refreshTimeout', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inAction.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
+            const oldValue = this.config.action;
             const newValue = value ?? '';
-            this.logConfigUpdate('action', (this.config.action ?? '').toString(), newValue);
             this.config.action = newValue;
+            this.logConfigUpdate('action', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inCData.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
+            const oldValue = this.config.cData;
             const newValue = value ?? '';
-            this.logConfigUpdate('cData', (this.config.cData ?? '').toString(), newValue);
             this.config.cData = newValue
+            this.logConfigUpdate('cData', (oldValue ?? '').toString(), newValue, this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inTabIndex.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
+            const oldValue = this.config.tabIndex;
             const newValue = parseInt(value?.toString() ?? '0');
-            this.logConfigUpdate('tabIndex', (this.config.tabIndex ?? '').toString(), newValue.toString());
             this.config.tabIndex = newValue;
+            this.logConfigUpdate('tabIndex', (oldValue ?? '').toString(), newValue.toString(), this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inResponseField.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
+            const oldValue = this.config.responseField;
             const newValue = value === true;
-            this.logConfigUpdate('responseField', (this.config.responseField ?? '').toString(), newValue.toString());
             this.config.responseField = newValue;
+            this.logConfigUpdate('responseField', (oldValue ?? '').toString(), newValue.toString(), this.config);
             Turnstile.manager!.reRender(this.config);
         });
         
         this.inFeedbackEnabled.valueChanges.subscribe(value => {
             if(Turnstile.manager === undefined) {return;}
 
+            const oldValue = this.config.feedbackEnabled;
             const newValue = value === true;
-            this.logConfigUpdate('feedbackEnabled', (this.config.feedbackEnabled ?? '').toString(), newValue.toString());
             this.config.feedbackEnabled = newValue;
+            this.logConfigUpdate('feedbackEnabled', (oldValue ?? '').toString(), newValue.toString(), this.config);
             Turnstile.manager!.reRender(this.config);
         });
     }

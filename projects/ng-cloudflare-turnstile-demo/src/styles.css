@@ -129,6 +129,7 @@ select, input[type="text"], input[type="number"] {
     padding: 8px;
     margin-top: 5px;
     box-sizing: border-box;
+    border-radius: 8px;
 }
 
 label {

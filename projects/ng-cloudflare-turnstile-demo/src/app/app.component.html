@@ -1,4 +1,3 @@
-<!-- <div class="center-wrapper-head">fasdfa</div> -->
 @if(!isVerified) {
     <div class="ctrls">
         <div class="center-wrapper" style="text-align: center; justify-content: center; display: block; height: 100%; width: 100%; padding: 20px;">
@@ -135,9 +134,13 @@
                 </div>
 
                 <div>
-                    <br><i class="ta-header-text">Configuration</i>
+                    <br><i class="ta-header-text">
+                        <app-clipboard [data]="configChanges.conf"></app-clipboard>
+                        Configuration
+                    </i>
                     <div class="ts-conf-container">
-                        <pre>{{conf}}</pre>
+                        <!-- <pre [innerHTML]="conf()"> {{configChanges.conf}}</pre> -->
+                        <pre>{{configChanges.conf}}</pre>
                     </div>
                     <div class="ts-conf-container-bottom">
                         @if(configChanges.name !== '') {
@@ -161,7 +164,7 @@
                     <div style="padding: 20px">
 
                         @if(inSiteKey.value?.toUpperCase()?.includes('0000BB')) {
-                        <div style="color: red; font-size: 12px;">⚠️ SELECTED TEST KEY WILL RENDER THE WIDGET INVISIBLE
+                        <div style="color: red; font-size: 12px;">⚠️ SELECTED SITE KEY WILL RENDER THE WIDGET INVISIBLE
                         </div>
                         }
                         @if(inRetry.value?.toUpperCase()?.includes('NEVER')) {
@@ -228,17 +231,20 @@
                 </div>
 
                 <div>
-                    <br><i class="ta-header-text">Configuration</i>
+                    <i class="ta-header-text">
+                        <app-clipboard [data]="configChanges.conf"></app-clipboard>
+                        Configuration
+                    </i>
                     <div class="ts-conf-container">
-                        <pre>{{conf}}</pre>
+                        <pre>{{configChanges.conf}}</pre>
                     </div>
                     <div class="ts-conf-container-bottom">
                         @if(configChanges.name !== '') {
-                        <b>{{configChanges.name}}</b> is updated<br>
-                        <b>from</b> "<i>{{configChanges.from}}</i>"<br>
-                        <b>to</b> "<i>{{configChanges.to}}</i>"
+                            <b>{{configChanges.name}}</b> is updated<br>
+                            <b>from</b> "<i>{{configChanges.from}}</i>"<br>
+                            <b>to</b> "<i>{{configChanges.to}}</i>"
                         } @else {
-                        update the configuration to see the behavior
+                            update the configuration to see the behavior
                         }
                     </div>
                 </div>
