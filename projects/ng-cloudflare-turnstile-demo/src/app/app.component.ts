@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, type OnInit, signal, type WritableSignal } from '@angular/core';
+import { Component, ChangeDetectorRef, type OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgCloudflareTurnstile, Appearance, DevSiteKey, RefreshExpiry, RefreshTimeout, Retry, Size, Theme, type Config, type Result, Language, State, type TurnstileManager } from 'ng-cloudflare-turnstile';
 import { CaptchaComponent } from "../captcha/captcha.component";
