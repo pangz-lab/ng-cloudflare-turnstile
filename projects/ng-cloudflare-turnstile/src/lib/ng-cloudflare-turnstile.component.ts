@@ -282,7 +282,6 @@ class EventHandler {
 export class NgCloudflareTurnstile implements AfterViewInit, OnInit, OnDestroy {
     private _manager?: TurnstileManager;
 
-    // Use a direct ElementRef (not a '#id' selector). Prevents Turnstile from attaching to a stale/destroyed container after route changes.
     @ViewChild('cfContainer', { static: true }) private cfContainer!: ElementRef<HTMLDivElement>;
 
     @Input() config: Config = {
@@ -392,7 +391,6 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit, OnDestroy {
     ngAfterViewInit(): void { this.loadTurnstileScript(); }
 
     ngOnDestroy(): void {
-        // Remove this widget instance to avoid Turnstile reporting the previous instance as 'hung/crashed' on re-init.
         this._manager?.remove(null);
     }
 
