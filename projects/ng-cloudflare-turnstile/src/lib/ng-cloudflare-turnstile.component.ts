@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, type AfterViewInit, type OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, type AfterViewInit, type OnInit } from '@angular/core';
 
 declare global {
     interface Window {
@@ -164,7 +164,7 @@ export class TurnstileManager {
         this.widgetId = this.obj.render(this.containerRef, this.options);
         
         const payload = { name: 'WIDGET_CREATED', data: this.widgetId, result: State.WIDGET_CREATED, manager: this}
-        this.options.onCreate(payload);
+        this.options.onCreate?.(payload);
         this.event.emit(payload);
     }
 
@@ -172,7 +172,7 @@ export class TurnstileManager {
         this.obj.reset(id ?? this.widgetId);
 
         const payload = { name: 'WIDGET_RESET', data: id, result: State.WIDGET_RESET, manager: this};
-        this.options.onReset(payload);
+        this.options.onReset?.(payload);
         this.event.emit(payload);
     }
     
@@ -180,7 +180,7 @@ export class TurnstileManager {
         this.obj.remove(id ?? this.widgetId);
 
         const payload = { name: 'WIDGET_REMOVED', data: id, result: State.WIDGET_REMOVED, manager: this};
-        this.options.onRemove(payload);
+        this.options.onRemove?.(payload);
         this.event.emit(payload);
     }
 
@@ -276,10 +276,14 @@ class EventHandler {
     selector: 'ng-cloudflare-turnstile',
     standalone: true,
     imports: [],
-    template: `<div id="cf-container"></div>`,
+    template: `<div #cfContainer></div>`,
     styles: ``
 })
-export class NgCloudflareTurnstile implements AfterViewInit, OnInit {
+export class NgCloudflareTurnstile implements AfterViewInit, OnInit, OnDestroy {
+    private _manager?: TurnstileManager;
+
+    @ViewChild('cfContainer', { static: true }) private cfContainer!: ElementRef<HTMLDivElement>;
+
     @Input() config: Config = {
         siteKey: '',
         action: '',
@@ -307,9 +311,9 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit {
     };
     @Output() event = new EventEmitter<Result>();
     constructor() {
-        window.onloadTurnstileCallback = function () {
+        window.onloadTurnstileCallback = () => {
             const conf = EventHandler.conf;
-            const containerRef = "#cf-container";
+            const containerRef = this.cfContainer.nativeElement;
             const renderingConf = {
                 sitekey: conf.siteKey,
                 action: conf.action,
@@ -368,7 +372,8 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit {
             };
             const widgetId = window.turnstile.render(containerRef, renderingConf);
             EventHandler.setWidgetId(widgetId);
-            EventHandler.copyWith({manager: new TurnstileManager(window.turnstile, EventHandler.e, widgetId, containerRef, renderingConf)});
+            this._manager = new TurnstileManager(window.turnstile, EventHandler.e, widgetId, containerRef, renderingConf);
+            EventHandler.copyWith({manager: this._manager});
 
             const payload = { name: 'WIDGET_CREATED', data: widgetId, result: State.WIDGET_CREATED, manager: EventHandler.manager};
             if(EventHandler.conf.onCreate !== undefined) { EventHandler.conf.onCreate!(payload); }
@@ -384,6 +389,10 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit {
     }
 
     ngAfterViewInit(): void { this.loadTurnstileScript(); }
+
+    ngOnDestroy(): void {
+        this._manager?.remove(null);
+    }
 
     private loadTurnstileScript(): void {
         // Check if script is already loaded to avoid duplicates
