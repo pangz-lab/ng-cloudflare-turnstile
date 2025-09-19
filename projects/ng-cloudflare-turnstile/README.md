@@ -1,6 +1,6 @@
 # ng-cloudflare-turnstile
 
-![NPM Version](https://img.shields.io/npm/v/@pangz/ng-cloudflare-turnstile?color=orange&style=flat-square)
+![Version](https://img.shields.io/npm/v/@pangz/ng-cloudflare-turnstile?color=orange&style=flat-square)
 ![NPM Total Downloads](https://img.shields.io/npm/dt/@pangz/ng-cloudflare-turnstile?color=blue&style=flat-square)
 ![NPM Monthly Downloads](https://img.shields.io/npm/dm/@pangz/ng-cloudflare-turnstile?color=green&style=flat-square)
 ![NPM License](https://img.shields.io/npm/l/@pangz/ng-cloudflare-turnstile?color=purple&style=flat-square)
@@ -323,11 +323,23 @@ width="100" height="auto">
 </a>
 
 ### Donation Address
+
+| VerusID                                                                                                   | VRSC                                                                                                   | BTC                                                                                                   | ETH                                                                                                   | vARRR / vDEX / CHIPS / KMD                                                                                  | 
+| :---:                                                                                                     | :---:                                                                                                  | :---:                                                                                                 | :---:                                                                                                 | :---:                                                                                                       | 
+| <img src="https://pangz-lab.github.io/assets/img/donations/wallet-verusid.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-vrsc.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-btc.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-eth.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-pbaas+kmd.png" width="150" height="auto"> |
+
+
 ***Verus ID*** : 
 pangz@
 <br>
 ***VRSC*** : 
 RNrhRTq8ioDTrANrm52c9MfFyPKr3cmhBj
+
+***BTC*** : 
+1MvBehjjgYd2EMGg5nP1ThWn6Ah4sqUpWm
+
+***ETH*** : 
+0x9b69b5A04917A204f91B51CBE4C9e9F4c37f507c
 
 ***vARRR*** : 
 RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
@@ -335,16 +347,11 @@ RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 ***vDEX*** : 
 RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 
-***KMD*** : 
+***CHIPS*** : 
 RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 
-***BTC*** : 
-3MsmELpB8bsYvFJCYKrUpMuoBATVR5eeta
-
-***ETH*** : 
-0xa248d188725c3b78af7e7e8cf4cfb8469e46cf3b
-
-<br>
+***KMD*** : 
+RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 <br>
 
 # License
