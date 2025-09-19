@@ -1,6 +1,6 @@
 # ng-cloudflare-turnstile
 
-![NPM Version](https://img.shields.io/npm/v/@pangz/ng-cloudflare-turnstile?color=orange&style=flat-square)
+![Version](https://img.shields.io/npm/v/@pangz/ng-cloudflare-turnstile?color=orange&style=flat-square)
 ![NPM Total Downloads](https://img.shields.io/npm/dt/@pangz/ng-cloudflare-turnstile?color=blue&style=flat-square)
 ![NPM Monthly Downloads](https://img.shields.io/npm/dm/@pangz/ng-cloudflare-turnstile?color=green&style=flat-square)
 ![NPM License](https://img.shields.io/npm/l/@pangz/ng-cloudflare-turnstile?color=purple&style=flat-square)
@@ -9,10 +9,18 @@
 <!-- ![Code Coverage](https://img.shields.io/codecov/c/github/pangz-lab/ng-cloudflare-turnstile?color=brightgreen&style=flat-square) -->
 <!-- ![GitHub Stars](https://img.shields.io/github/stars/pangz-lab/ng-cloudflare-turnstile?style=social) -->
 
+<a href="https://pangz-lab.github.io/playground/ng-cloudflare-turnstile/">
+    <img src="https://raw.githubusercontent.com/pangz-lab/ng-cloudflare-turnstile/refs/heads/main/turnstile.webp">
+</a>
+
+<br>
+<br>
+
 An intuitive, lightweight and easy to integrate [cloudflare-turnstile](https://developers.cloudflare.com/turnstile/) component for Angular.
 
-- This a full implementation of cloudflare-turnstile for Angular. 
-- All properties and callbacks + other utilities are available for an easier integration.
+- Easy to use Angular cloudflare-turnstile component. 
+- Fully supports the official library properties and callbacks.
+- Utilities and classes are provided for an easier integration and user-experience.
 ## 📥 Install
 ```bash
 npm i @pangz/ng-cloudflare-turnstile
@@ -23,20 +31,20 @@ npm i @pangz/ng-cloudflare-turnstile
 In the logic class (i.e.)`example.component.ts`, add the following.
 ```ts
 import {
-    NgCloudflareTurnstileComponent,
+    NgCloudflareTurnstile,
     Config,
     Result
-} from 'ng-cloudflare-turnstile';
+} from '@pangz/ng-cloudflare-turnstile';
 
 @Component({
     ...
-    imports: [NgCloudflareTurnstileComponent],
+    imports: [NgCloudflareTurnstile],
     ...
 })
 ```
 ### 2. Widget Configuration
 Add the widget configuration and the event listener.<br>
-( You need to get your own `siteKey` from the cloudflare dashboard. See <a href="#siteKeys">below</a> to use a development siteKey for testing. )
+( You need to get your own `siteKey` from the cloudflare dashboard. <a href="#siteKeys">See below</a> to use a development siteKey for testing. )
 ```ts
 export class ExampleComponent {
     config: Config = {
@@ -54,17 +62,17 @@ In the template or view file (i.e.)`example.component.html`, add the turnstile c
 <ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>
 ```
 
-### [ Minimal Setup ]
+### [ Minimum Setup ]
 ```ts
 import {
-    NgCloudflareTurnstileComponent,
+    NgCloudflareTurnstile,
     Config,
     Result
-} from 'ng-cloudflare-turnstile';
+} from '@pangz/ng-cloudflare-turnstile';
 
 @Component({
     ...
-    imports: [NgCloudflareTurnstileComponent],
+    imports: [NgCloudflareTurnstile],
     template: `<ng-cloudflare-turnstile [config]="config" (event)="eventHandler($event)"></ng-cloudflare-turnstile>`
     ...
 })
@@ -78,12 +86,10 @@ export class ExampleComponent {
 
 That's all you need to have a working turnstile.
 
-<br>
-<br>
 
-## 🔑 Development SiteKeys
+### [ Development SiteKeys ]
 <i id="siteKeys"></i>
-You can use the cloudflare test `siteKey`s if you don't have yours yet alternatively.<br>
+Alternatively, you can use the cloudflare test `siteKey`s if you don't have one yet.<br>
 Note that these are test keys especially used for development.
 ( Make sure to get your own when you decide to put it in production. )
 ```ts
@@ -121,7 +127,7 @@ eventHandler(d: Result): void {
 ```
 
 Note that you need a `secretKey` to verify the token from your server. This usually comes in pair when you generate from [cloudflare dashboard](https://developers.cloudflare.com/turnstile/get-started/).
-There are test tokens that are also available for development used. Feel free to try one.
+There are test tokens that are also available for development used.
 
 ```ts
 ALWAYS_PASSES = '1x0000000000000000000000000000000AA',
@@ -184,7 +190,7 @@ Configuration callbacks can be used for cases where you need to isolate your log
 |`timeout-callback`           | `onTimeout`                | `State.TIMEOUT`            |
 
 Built-in callbacks might be enough for most cases but there are configuration that might be tricky especially when manual rendering is involved. 
-For example, when retry is set to `never`, when an error occurred, you code might be left hanging and might not able to respond in a straight-forward way.<br><br>
+For example, when retry is set to `never`, when an error occurred, your code might be left hanging and might not able to respond in a straight-forward way.<br><br>
 A couple of new events are made available which can also be listened to during the widget's lifetime. Due to the nature of manual rendering, these extra callbacks (paired with the `TurnstileManager`) becomes handy allowing finer control over managing the widgets's life-cycle enabling you to respond accordingly when certain events ( that matter ) occurred.
 
 | Built-in Callback | Config Callback  |  States                    | Call Timing                         |
@@ -196,7 +202,7 @@ A couple of new events are made available which can also be listened to during t
 <br>
 <br>
 
-# 🕹 Turnstile Manager
+# 👨🏻‍✈️ TurnstileManager
 You might be wondering, "what are the possible ways to handle cases where you need to rerender or remove a widget"? What's there to use?<br><br>
 Introducing - the `TurnstileManager`.<br><br>
 
@@ -259,7 +265,7 @@ The following are configurations and library-provided classes you can use to cus
 Complete list of classes and types.
 ```ts
 import {
-    NgCloudflareTurnstileComponent,
+    NgCloudflareTurnstile,
     Config,
     Result,
     DevSiteKey,
@@ -272,7 +278,7 @@ import {
     RefreshTimeout,
     State,
     TurnstileManager
-} from 'ng-cloudflare-turnstile';
+} from '@pangz/ng-cloudflare-turnstile';
 ```
 
 
@@ -317,11 +323,23 @@ width="100" height="auto">
 </a>
 
 ### Donation Address
+
+| VerusID                                                                                                   | VRSC                                                                                                   | BTC                                                                                                   | ETH                                                                                                   | vARRR / vDEX / CHIPS / KMD                                                                                  | 
+| :---:                                                                                                     | :---:                                                                                                  | :---:                                                                                                 | :---:                                                                                                 | :---:                                                                                                       | 
+| <img src="https://pangz-lab.github.io/assets/img/donations/wallet-verusid.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-vrsc.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-btc.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-eth.png" width="150" height="auto"> | <img src="https://pangz-lab.github.io/assets/img/donations/wallet-pbaas+kmd.png" width="150" height="auto"> |
+
+
 ***Verus ID*** : 
 pangz@
 <br>
 ***VRSC*** : 
 RNrhRTq8ioDTrANrm52c9MfFyPKr3cmhBj
+
+***BTC*** : 
+1MvBehjjgYd2EMGg5nP1ThWn6Ah4sqUpWm
+
+***ETH*** : 
+0x9b69b5A04917A204f91B51CBE4C9e9F4c37f507c
 
 ***vARRR*** : 
 RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
@@ -329,16 +347,11 @@ RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 ***vDEX*** : 
 RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 
-***KMD*** : 
+***CHIPS*** : 
 RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 
-***BTC*** : 
-3MsmELpB8bsYvFJCYKrUpMuoBATVR5eeta
-
-***ETH*** : 
-0xa248d188725c3b78af7e7e8cf4cfb8469e46cf3b
-
-<br>
+***KMD*** : 
+RWCNjDd2HNRbJMdsYxN8ZDqyrS9fYNANaR
 <br>
 
 # License
