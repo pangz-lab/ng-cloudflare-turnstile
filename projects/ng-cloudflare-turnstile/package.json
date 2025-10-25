@@ -1,7 +1,7 @@
 {
   "name": "@pangz/ng-cloudflare-turnstile",
   "description": "An intuitive, lightweight and easy to integrate cloudflare-turnstile component for Angular.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "peerDependencies": {
     "@angular/common": "^18.0.0 || ^19.0.0",
     "@angular/core": "^18.0.0 || ^19.0.0"
@@ -37,6 +37,10 @@
     "pangz-lab"
   ],
   "homepage": "https://pangz-lab.github.io/link?s=ngct.playground",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pangz-lab/ng-cloudflare-turnstile"
+  },
   "author": "Pangz",
   "license": "MIT",
   "bugs": {

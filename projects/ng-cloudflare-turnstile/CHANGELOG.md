@@ -1,3 +1,8 @@
+## v0.5.0 - 2025/10/25
+### Bug fix and improvement
+- fixed generation of mutiple turnstile instances
+- added id in the payload for reference
+
 ## v0.4.0 - 2025/09/19
 ### Bug fix and improvement
 
