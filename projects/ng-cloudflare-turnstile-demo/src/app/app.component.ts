@@ -1,10 +1,10 @@
-import { Component, ChangeDetectorRef, type OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, type OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgCloudflareTurnstile, Appearance, DevSiteKey, RefreshExpiry, RefreshTimeout, Retry, Size, Theme, type Config, type Result, Language, State, type TurnstileManager } from 'ng-cloudflare-turnstile';
+import { Appearance, DevSiteKey, Language, NgCloudflareTurnstile, RefreshExpiry, RefreshTimeout, Retry, Size, State, Theme, type Config, type Result, type TurnstileManager } from '../../../ng-cloudflare-turnstile/src/public-api';
 import { CaptchaComponent } from "../captcha/captcha.component";
+import { ClipboardComponent } from "../clipboard/clipboard.component";
 import { LibLabelComponent } from "../lib-label/lib-label.component";
 import { LibTitleComponent } from "../lib-title/lib-title.component";
-import { ClipboardComponent } from "../clipboard/clipboard.component";
 
 @Component({
     selector: 'app-root',
