@@ -1,8 +1,15 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, type AfterViewInit, type OnInit } from '@angular/core';
 
+type TurnstileCallback = () => void;
+
+type IdentifiableTurnstileCallback = {
+    callbackId: string;
+    callback: TurnstileCallback;
+};
+
 declare global {
     interface Window {
-        onloadTurnstileCallback: () => void;
+        onloadTurnstileCallback: TurnstileCallback;
         turnstile: {
             render: (
                 idOrContainer: string | HTMLElement,
@@ -14,7 +21,7 @@ declare global {
             ) => string | undefined;
             remove: (widgetIdOrContainer: string | HTMLElement) => void;
         };
-        onloadTurnstileCallbackQueue?: (() => void)[];
+        onloadTurnstileCallbackQueue: IdentifiableTurnstileCallback[];
     }
 }
 
@@ -255,6 +262,7 @@ class EventHandler {
     styles: ``
 })
 export class NgCloudflareTurnstile implements AfterViewInit, OnInit, OnDestroy {
+    private static initialized = false;
     private _manager?: TurnstileManager;
     private _windowTurnstile: any;
     @ViewChild('cfContainer', { static: true }) private cfContainer!: ElementRef<HTMLDivElement>;
@@ -286,29 +294,39 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit, OnDestroy {
     };
     @Output() event = new EventEmitter<Result>();
     private _eventHandler?: EventHandler;
+    private uniqueId: string = Math.random().toString(36).substring(2, 15);
+
     constructor() {
+        if (!NgCloudflareTurnstile.initialized) {
+            window.onloadTurnstileCallbackQueue = [];
+            window.onloadTurnstileCallback = () => {
+                if (window.onloadTurnstileCallbackQueue) {
+                    window.onloadTurnstileCallbackQueue.forEach((widget) => widget.callback());
+                }
+            };
+            NgCloudflareTurnstile.initialized = true;
+        }
+    
         if (!window.onloadTurnstileCallbackQueue) {
             window.onloadTurnstileCallbackQueue = [];
         }
+    
+        const callback: IdentifiableTurnstileCallback = {
+            callbackId: this.uniqueId,
+            callback: () => {
+                if (this._manager) return;
+                this._windowTurnstile = window.turnstile;
+                const tempManager = new TurnstileManager(this._windowTurnstile, this.event);
+                this._eventHandler = new EventHandler(this.event, this.config, tempManager);
+                this.init();
+            }
+        };
 
-        window.onloadTurnstileCallbackQueue.push(() => {
-            this._windowTurnstile = window.turnstile;
-            const tempManager = new TurnstileManager(this._windowTurnstile, this.event);
-            this._eventHandler = new EventHandler(this.event, this.config, tempManager);
-            this.init();
-        });
-
-        if (!window.onloadTurnstileCallback) {
-            window.onloadTurnstileCallback = () => {
-                if (window.onloadTurnstileCallbackQueue) {
-                    window.onloadTurnstileCallbackQueue.forEach(callback => callback());
-                }
-            };
-        }
+        window.onloadTurnstileCallbackQueue.push(callback);
     }
 
     ngOnInit(): void {
-        if (window.turnstile) {
+        if (window.turnstile && window.onloadTurnstileCallback) {
             window.onloadTurnstileCallback();
         }
     }
@@ -319,11 +337,26 @@ export class NgCloudflareTurnstile implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this._manager?.remove(null);
+        this._eventHandler = undefined;
+        this._manager = undefined;
+
+        if (window.onloadTurnstileCallbackQueue) {
+            window.onloadTurnstileCallbackQueue = window.onloadTurnstileCallbackQueue.filter(
+                (callback: any) => callback.id !== this.uniqueId
+            );
+        }
     }
 
     private init(): void {
+        if (!this.config.siteKey) {
+            console.error('[Cloudflare Turnstile] Missing siteKey in configuration.');
+            return;
+        }
+
+        const nativeElement = this.cfContainer.nativeElement;
+
         const conf = this._eventHandler!.conf;
-        const containerRef = this.cfContainer.nativeElement;
+        const containerRef = nativeElement;
         const renderingConf = {
             sitekey: conf.siteKey,
             action: conf.action,
