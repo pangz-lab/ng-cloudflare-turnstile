@@ -1,3 +1,12 @@
+## v0.6.0 - 2026/06/28
+### Improvement
+- added support for angular version 16 to version 22
+
+## v0.5.0 - 2025/10/25
+### Bug fix and improvement
+- fixed generation of mutiple turnstile instances
+- added id in the payload for reference
+
 ## v0.4.0 - 2025/09/19
 ### Bug fix and improvement
 

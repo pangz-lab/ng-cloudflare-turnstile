@@ -1,10 +1,14 @@
 {
   "name": "@pangz/ng-cloudflare-turnstile",
   "description": "An intuitive, lightweight and easy to integrate cloudflare-turnstile component for Angular.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "peerDependencies": {
-    "@angular/common": "^18.0.0 || ^19.0.0",
-    "@angular/core": "^18.0.0 || ^19.0.0"
+    "@angular/common": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0 || ^22.0.0",
+    "@angular/core": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0 || ^22.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/common": { "optional": false },
+    "@angular/core": { "optional": false }
   },
   "dependencies": {
     "tslib": "^2.3.0"
